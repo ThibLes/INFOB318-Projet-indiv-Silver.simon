@@ -1,0 +1,4 @@
+Bonjour, j'ai du mal à comprendre ce qu'on doit mettre dans les dossiers analysis/design/implementation.
+Si j'ai des notes d'un entretien, ils finiront dans analysis ? et des schémas pour la future application dans design ? et pour implementation ? 
+
+Merci !  
