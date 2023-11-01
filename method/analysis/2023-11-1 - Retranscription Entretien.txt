@@ -1,0 +1,18 @@
+Retranscription des points importants du 1er entretien avec M. Vincent ENGLEBERT - 19/10/2023
+Silver.Simon : Application mobile.
+Les notes ont été prises par écrit.
+
+L'application sera développée sur Android en utilisant Kotlin comme langage de programmation (choix personnel).
+L'objectif de l'application est d'aider à stimuler la mémoire des personnes atteintes d'Alzheimer à travers des jeux.
+Ces jeux utiliseront principalement des photos pour stimuler la mémoire à court terme et procurer un sentiment de bien-être.
+L'application mettra en avant des souvenirs agréables, avec la possibilité d'exclure les souvenirs désagréables si nécessaire.
+L'interface de l'application doit être simple et intuitive, car elle est destinée à un public âgé.
+Il y aura une option d'accès "secret" pour les personnes en charge du compte, permettant d'ajouter ou de modifier des photos.
+L'application n'aura pas de limite de temps, permettant aux utilisateurs de progresser à leur propre rythme.
+L'application pourrait s'inspirer de Quizlet.
+Une fonction audio est envisagée, mais l'accent sera d'abord mis sur les photos.
+Pour tester l'application, il est possible d'utiliser des photos d'acteurs/personnes célèbres.
+Un système de score pourrait être mis en place pour identifier les photos rapidement reconnues par rapport à celles qui sont moins reconnues, afin de répéter davantage ces dernières.
+Les utilisateurs pourront exprimer leurs sentiments lorsqu'ils voient une photo.
+Les photos pourront être ajoutées directement depuis l'appareil photo de l'utilisateur ou depuis sa galerie (à définir).
+Si un utilisateur semble triste, l'application pourrait lui montrer des photos susceptibles de le rendre heureux, et vice versa.
