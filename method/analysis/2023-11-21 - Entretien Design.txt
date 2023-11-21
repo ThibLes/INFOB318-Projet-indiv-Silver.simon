@@ -1,0 +1,21 @@
+Retranscription suite à la réunion pour les visuels de l'application
+
+Il est important de faire attention aux contrastes, les dégradés dans l'application sont à éviter
+Préférer l'utilisation de smileys sur les boutons au lieu de texte, car cela est plus parlant
+Si possible, créer une animation sur le bouton cœur
+Être très explicite sur les questions, remplacer "C'est le moment de jouer" par "Qui est-ce ?"
+Ajouter des indications comme "Choisis" ou "Qui est-ce ?" pour inciter clairement à l'action
+Mettre l'accent sur les aspects positifs "j'aime" plutôt que sur les négatifs
+
+Adapter le jeu en cas de difficultés, par exemple en réduisant le nombre de réponses possibles ou en proposant un jeu de type pendu
+Proposer plusieurs photos d'une même personne, car le problème peut être lié à la photo et non à la mémoire
+Adopter une approche de développement axée sur les utilisateurs les moins à l'aise
+Changer la police de caractères pour une plus adaptée, comme la police Parkinson, ou sinon utiliser Verdana ou Arial
+En cas de non-arrêt du jeu, ajouter un bouton pour afficher le score
+
+Il est aussi nécessaire de rédiger une documentation, incluant un guide utilisateur (UserGuide) et un guide pour les programmeurs (Programmer's Guide), que je peux rédiger en français
+
+
+
+
+
