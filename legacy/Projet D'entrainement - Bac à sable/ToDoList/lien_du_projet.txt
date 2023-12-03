@@ -1,0 +1,5 @@
+https://github.com/ThibLes/toDoList_1
+
+
+Difficulté à introduire un projet depuis Android Studio ( sous le format Project )
+dans un répetertoire Github déja créé. Je mets donc le lien en attendant de trouver une solution.
