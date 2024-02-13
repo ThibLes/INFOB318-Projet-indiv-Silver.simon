@@ -1,4 +1,5 @@
-Bonjour, j'ai du mal à comprendre ce qu'on doit mettre dans les dossiers analysis/design/implementation.
-Si j'ai des notes d'un entretien, ils finiront dans analysis ? et des schémas pour la future application dans design ? et pour implementation ? 
+Bonjour, j'ai des difficultés à introduire mon code depuis Android Studio vers le répertoire GitHub du projet.
 
-Merci !  
+Ce que je fais pour l'instant est que je crée un répertoire public sur mon GitHub en mettant le lien dans le répertoire du projet et j'introduis aussi le code en copié/collé (qui, je pense, possède des bugs en étant introduit de cette manière).
+
+Je vais regarder pour trouver une solution.
