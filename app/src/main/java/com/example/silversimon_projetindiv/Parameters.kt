@@ -24,7 +24,7 @@ class Parameters : AppCompatActivity() {
 
         val buttonModifierCode = findViewById<Button>(R.id.buttonModifierCode)
         val editTextNewCode = findViewById<EditText>(R.id.editTextNewCode)
-
+        //test
 
 
 
