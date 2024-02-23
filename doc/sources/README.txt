@@ -1,1 +1,0 @@
-Le code latex de votre documebtation dans les différents répertoires

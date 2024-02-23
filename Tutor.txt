@@ -1,5 +1,0 @@
-Bonjour, j'ai des difficultés à introduire mon code depuis Android Studio vers le répertoire GitHub du projet.
-
-Ce que je fais pour l'instant est que je crée un répertoire public sur mon GitHub en mettant le lien dans le répertoire du projet et j'introduis aussi le code en copié/collé (qui, je pense, possède des bugs en étant introduit de cette manière).
-
-Je vais regarder pour trouver une solution.
