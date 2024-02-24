@@ -7,36 +7,6 @@
     android:background="#E8C36A"
     tools:context=".Parameters">
 
-    <EditText
-        android:id="@+id/editTextPrenomPersonne"
-        android:layout_width="220dp"
-        android:layout_height="44dp"
-        android:layout_marginEnd="5dp"
-        android:hint="Entrez le prénom de la  personne"
-        android:textColor="#FFFFFF"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.145"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textPrenomPatient3"
-        app:layout_constraintVertical_bias="0.03" />
-
-    <TextView
-        android:id="@+id/textPrenomPatient3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/verdana"
-        android:text="Ajouter une photo"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.145"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.565" />
-
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="126dp"
@@ -152,17 +122,17 @@
         app:layout_constraintVertical_bias="0.489" />
 
     <Button
-        android:id="@+id/buttonModifierCode2"
+        android:id="@+id/buttonGalerie"
         android:layout_width="145dp"
         android:layout_height="34dp"
-        android:layout_marginEnd="12dp"
         android:backgroundTint="#F3A161"
-        android:text="Prendre photo"
+        android:text="Galerie"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/imageHome"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.634" />
+        app:layout_constraintVertical_bias="0.769" />
 
     <ImageView
         android:id="@+id/imageHome"

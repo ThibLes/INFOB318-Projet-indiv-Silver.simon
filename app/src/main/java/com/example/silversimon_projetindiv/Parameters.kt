@@ -1,5 +1,6 @@
 package com.example.silversimon_projetindiv
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +11,7 @@ import android.widget.ImageView
 import android.widget.Toast
 
 class Parameters : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_parameters)
@@ -24,6 +26,8 @@ class Parameters : AppCompatActivity() {
 
         val buttonModifierCode = findViewById<Button>(R.id.buttonModifierCode)
         val editTextNewCode = findViewById<EditText>(R.id.editTextNewCode)
+
+        val buttonGallery = findViewById<Button>(R.id.buttonGalerie)
         //test
 
 
@@ -69,7 +73,11 @@ class Parameters : AppCompatActivity() {
             startActivity(intent)
         }
 
-
+        // Aller Galerie
+        buttonGallery.setOnClickListener {
+            val intent = Intent(this, Gallery::class.java)
+            startActivity(intent)
+        }
 
     }
 }

@@ -28,6 +28,9 @@
             android:name=".Game"
             android:exported="false" />
         <activity
+            android:name=".Gallery"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
