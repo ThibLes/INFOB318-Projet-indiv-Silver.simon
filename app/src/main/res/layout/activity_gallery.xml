@@ -30,6 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/verdanabold"
                 android:layout_marginBottom="8dp"
                 android:text="Photos des personnes "
                 android:textColor="@color/black"
@@ -39,7 +40,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvPrivatePhotos"
                 android:layout_width="match_parent"
-                android:layout_height="459dp"
+                android:layout_height="580dp"
                 android:layout_marginBottom="16dp"
                 app:layout_constraintBottom_toTopOf="@+id/btnTakePhoto"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -64,10 +65,11 @@
 
     <ImageView
         android:id="@+id/imageHome"
-        android:layout_width="126dp"
-        android:layout_height="115dp"
-        android:layout_marginStart="276dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="328dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/iconhome" />
+        app:srcCompat="@drawable/baseline_home_24" />
 </androidx.constraintlayout.widget.ConstraintLayout>

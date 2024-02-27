@@ -5,5 +5,6 @@ import android.net.Uri
 
 data class InternalStoragePhoto(
     val name: String,
-    val bmp: Bitmap
+    val bmp: Bitmap,
+    val namePatient : String
 )

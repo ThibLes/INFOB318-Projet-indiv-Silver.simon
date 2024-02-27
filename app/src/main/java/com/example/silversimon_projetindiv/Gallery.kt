@@ -1,14 +1,19 @@
 package com.example.silversimon_projetindiv
 
 import android.content.Intent
+import android.Manifest
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -28,6 +33,10 @@ import java.util.UUID
  */
 class Gallery : AppCompatActivity(){
 
+    companion object {
+        const val CAMERA_PERMISSION_REQUEST_CODE = 1001
+    }
+
     private lateinit var binding: ActivityGalleryBinding
     private lateinit var internalStoragePhotoAdapter: InternalStoragePhotoAdapter
 
@@ -35,21 +44,39 @@ class Gallery : AppCompatActivity(){
     private val takePhoto = registerForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
         // Vérifiez si nous avons reçu un bitmap non-null
         bitmap?.let { nonNullBitmap ->
-            // Générez un nom de fichier unique pour la photo
-            val filename = UUID.randomUUID().toString()
-            // Essayez d'enregistrer la photo dans le stockage interne
-            val isSavedSuccessfully = savePhotoToInternalStorage(filename, nonNullBitmap)
-            if(isSavedSuccessfully) {
-                // Si la sauvegarde a réussi, rechargez les photos et affichez un message
-                loadPhotosFromInternalStorageIntoRecyclerView()
-                Toast.makeText(this, "Photo saved successfully", Toast.LENGTH_SHORT).show()
-            } else {
-                // Sinon, informez l'utilisateur de l'échec
-                Toast.makeText(this, "Failed to save photo", Toast.LENGTH_SHORT).show()
+            // Demandez le prénom après avoir pris la photo
+            askForFirstName { firstName ->
+                // Générez un nom de fichier unique pour la photo
+                val filename = UUID.randomUUID().toString()
+                // Essayez d'enregistrer la photo avec le prénom dans le stockage interne
+                val isSavedSuccessfully = savePhotoToInternalStorage(filename, nonNullBitmap, firstName)
+                if(isSavedSuccessfully) {
+                    // Si la sauvegarde a réussi, rechargez les photos et affichez un message
+                    loadPhotosFromInternalStorageIntoRecyclerView()
+                    Toast.makeText(this, "Photo saved successfully", Toast.LENGTH_SHORT).show()
+                } else {
+                    // Sinon, informez l'utilisateur de l'échec
+                    Toast.makeText(this, "Failed to save photo", Toast.LENGTH_SHORT).show()
+                }
             }
         } ?: Toast.makeText(this, "No photo captured", Toast.LENGTH_SHORT).show() // Gérez le cas où `bitmap` est null
     }
 
+    private fun askForFirstName(afterNameProvided: (String) -> Unit) {
+        val input = EditText(this)
+        AlertDialog.Builder(this)
+            .setTitle("Entrez le prénom")
+            .setMessage("Entrez le prénom de la personne sur la photo.")
+            .setView(input)
+            .setPositiveButton("Save") { dialog, which ->
+                val name = input.text.toString()
+                if(name.isNotBlank()) {
+                    afterNameProvided(name)
+                }
+            }
+            .setNegativeButton("Cancel", { dialog, which -> dialog.cancel() })
+            .show()
+    }
 
 
 
@@ -58,6 +85,19 @@ class Gallery : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         binding = ActivityGalleryBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Vérifiez si la permission CAMERA est déjà accordée
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            // Si la permission n'est pas accordée, demandez-la à l'utilisateur
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_REQUEST_CODE)
+        }
+
+        val buttonHome = findViewById<ImageView>(R.id.imageHome)
+        // Retourner au début
+        buttonHome.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
 
         internalStoragePhotoAdapter = InternalStoragePhotoAdapter { photo ->
             // Confirmez la suppression avec l'utilisateur avant de continuer
@@ -78,18 +118,6 @@ class Gallery : AppCompatActivity(){
                 }
                 .setNegativeButton("No", null)
                 .show()
-        }
-
-        val takePhoto = registerForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
-            bitmap?.let { nonNullBitmap ->
-                val isSavedSuccessfully = savePhotoToInternalStorage(UUID.randomUUID().toString(), nonNullBitmap)
-                if(isSavedSuccessfully) {
-                    loadPhotosFromInternalStorageIntoRecyclerView()
-                    Toast.makeText(this, "Photo saved successfully", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this, "Failed to save photo", Toast.LENGTH_SHORT).show()
-                }
-            } ?: Toast.makeText(this, "No photo captured", Toast.LENGTH_SHORT).show()
         }
 
         binding.btnTakePhoto.setOnClickListener {
@@ -124,23 +152,36 @@ class Gallery : AppCompatActivity(){
     private suspend fun loadPhotosFromInternalStorage(): List<InternalStoragePhoto> {
         return withContext(Dispatchers.IO) {
             val files = filesDir.listFiles()
-            files?.filter { it.canRead() && it.isFile && it.name.endsWith(".jpg") }?.map {
+            val sharedPref = getSharedPreferences("PhotoMetadata", MODE_PRIVATE)
+            files?.filter { it.canRead() && it.isFile && it.name.endsWith(".jpg") }?.mapNotNull {
                 val bytes = it.readBytes()
                 val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-                InternalStoragePhoto(it.name, bmp)
+                val filenameWithoutExtension = it.nameWithoutExtension
+                val namePatient = sharedPref.getString(filenameWithoutExtension, null)
+                namePatient?.let { np ->
+                    InternalStoragePhoto(it.name, bmp, np)
+                }
             } ?: listOf()
         }
     }
 
-    private fun savePhotoToInternalStorage(filename: String, bmp: Bitmap): Boolean {
+    private fun savePhotoToInternalStorage(filename: String, bmp: Bitmap, namePatient: String): Boolean {
+        // Le nom du fichier reste inchangé, seul pour la photo
+        val completeFilename = "$filename.jpg"
         return try {
-            openFileOutput("$filename.jpg", MODE_PRIVATE).use { stream ->
-                if(!bmp.compress(Bitmap.CompressFormat.JPEG, 95, stream)) {
+            openFileOutput(completeFilename, MODE_PRIVATE).use { stream ->
+                if (!bmp.compress(Bitmap.CompressFormat.JPEG, 95, stream)) {
                     throw IOException("Couldn't save bitmap.")
                 }
             }
+            // Enregistrement du nom du patient dans les préférences partagées
+            val sharedPref = getSharedPreferences("PhotoMetadata", MODE_PRIVATE)
+            with(sharedPref.edit()) {
+                putString(filename, namePatient) // Utilisez le nom de la photo comme clé pour le nom du patient
+                apply()
+            }
             true
-        } catch(e: IOException) {
+        } catch (e: IOException) {
             e.printStackTrace()
             false
         }
