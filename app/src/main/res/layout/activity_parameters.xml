@@ -123,16 +123,17 @@
 
     <Button
         android:id="@+id/buttonGalerie"
-        android:layout_width="145dp"
-        android:layout_height="34dp"
+        android:layout_width="164dp"
+        android:layout_height="47dp"
         android:backgroundTint="#F3A161"
         android:text="Galerie"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/imageHome"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.769" />
+        app:layout_constraintVertical_bias="0.847" />
 
     <ImageView
         android:id="@+id/imageHome"

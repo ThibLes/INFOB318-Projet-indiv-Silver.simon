@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SilverSimon_ProjetIndiv</string>
+    <string name="bonjour_patient">Bonjour %1$s,</string>
 </resources>
