@@ -63,11 +63,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/ic_baseline_photo_camera" />
 
+
+    <ImageView
+        android:id="@+id/backImg"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="24dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:src="@drawable/ic_back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <ImageView
         android:id="@+id/imageHome"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:layout_marginStart="328dp"
+        android:layout_marginStart="308dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

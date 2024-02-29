@@ -99,6 +99,13 @@ class Gallery : AppCompatActivity(){
             startActivity(intent)
         }
 
+        val buttonBack = findViewById<ImageView>(R.id.backImg)
+        // Retourner aux paramètres
+        buttonBack.setOnClickListener {
+            val intent = Intent(this, Parameters::class.java)
+            startActivity(intent)
+        }
+
         internalStoragePhotoAdapter = InternalStoragePhotoAdapter { photo ->
             // Confirmez la suppression avec l'utilisateur avant de continuer
             AlertDialog.Builder(this)
