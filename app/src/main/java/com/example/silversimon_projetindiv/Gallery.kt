@@ -107,19 +107,18 @@ class Gallery : AppCompatActivity(){
         }
 
         internalStoragePhotoAdapter = InternalStoragePhotoAdapter { photo ->
-            // Confirmez la suppression avec l'utilisateur avant de continuer
+            // confirmez la suppression avec l'utilisateur avant de continuer
             AlertDialog.Builder(this)
                 .setTitle("Delete Photo")
                 .setMessage("Are you sure you want to delete this photo?")
                 .setPositiveButton("Yes") { _, _ ->
-                    // Si l'utilisateur confirme, supprimez la photo du stockage interne
                     val isDeletionSuccessful = deletePhotoFromInternalStorage(photo.name)
                     if (isDeletionSuccessful) {
-                        // Si la suppression réussit, mettez à jour l'interface utilisateur
+                        // mettere à jour l'interface utilisateur
                         loadPhotosFromInternalStorageIntoRecyclerView()
                         Toast.makeText(this, "Photo successfully deleted", Toast.LENGTH_SHORT).show()
                     } else {
-                        // Si la suppression échoue, informez l'utilisateur
+                        // au cas ou on echoue dde supprimer
                         Toast.makeText(this, "Failed to delete photo", Toast.LENGTH_SHORT).show()
                     }
                 }
