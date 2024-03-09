@@ -15,9 +15,14 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 
 class Game : AppCompatActivity() {
+
+    private lateinit var question: Question
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
+
+        setupGame()
 
         // Retourner au début
         val buttonHome = findViewById<ImageView>(R.id.imageHome)
@@ -37,11 +42,16 @@ class Game : AppCompatActivity() {
         // récuperer le bouton suivvant
         val buttonNext = findViewById<Button>(R.id.buttonNext)
 
+        question = Question(this)
 
         lifecycleScope.launch {
             val imageViewPhotoPersonne = findViewById<ImageView>(R.id.imageViewPhotoPersonne)
             val randomPhotoId = getRandomPhotoIdFromInternalStorage()
             randomPhotoId?.let {
+                val correctName = getCorrectName(it)
+                val correctGenre = getCorrectGenre(it)
+                val propositions = question.generateQuestion(correctGenre,correctName)
+
                 setImageFromInternalStorage(it, imageViewPhotoPersonne)
             }
         }
@@ -55,6 +65,7 @@ class Game : AppCompatActivity() {
                 randomPhotoId?.let {
                     setImageFromInternalStorage(it, imageViewPhotoPersonne)
                 }
+                setupGame()
             }
         }
 
@@ -83,6 +94,47 @@ class Game : AppCompatActivity() {
         } catch (e: IOException) {
             e.printStackTrace()
             // peut-être informer l'utilisateur que le chargement de l'image a échoué?????????
+        }
+    }
+
+    private fun getCorrectName(photoId: String): String {
+        val sharedPreferences = getSharedPreferences("PhotoMetadata", Context.MODE_PRIVATE)
+        return sharedPreferences.getString("$photoId-name", "Inconnu") ?: "Inconnu"
+
+    }
+
+    private fun getCorrectGenre(photoId: String): String {
+        val sharedPreferences = getSharedPreferences("PhotoMetadata", Context.MODE_PRIVATE)
+        return sharedPreferences.getString("$photoId-gender", "nonGenre") ?: "nonGenre"
+    }
+
+    private fun updatePropositionButtons(propositions: List<String>) {
+        val buttonFirstChoice = findViewById<Button>(R.id.buttonFirstChoice)
+        val buttonSecondChoice = findViewById<Button>(R.id.buttonSecondChoice)
+        val buttonThirdChoice = findViewById<Button>(R.id.buttonThirdChoice)
+        val buttonFourthChoice = findViewById<Button>(R.id.buttonFourthChoice)
+
+        // donne proposition aux boutons
+        buttonFirstChoice.text = propositions[0]
+        buttonSecondChoice.text = propositions[1]
+        buttonThirdChoice.text = propositions[2]
+        buttonFourthChoice.text = propositions[3]
+
+        // Tu peux aussi ajouter des écouteurs d'événements ici pour gérer les clics sur les boutons
+    }
+
+    private fun setupGame() {
+        lifecycleScope.launch {
+            val imageViewPhotoPersonne = findViewById<ImageView>(R.id.imageViewPhotoPersonne)
+            val randomPhotoId = getRandomPhotoIdFromInternalStorage()
+            randomPhotoId?.let {
+                val correctName = getCorrectName(it)
+                val correctGenre = getCorrectGenre(it)
+                val propositions = question.generateQuestion(correctGenre, correctName)
+
+                setImageFromInternalStorage(it, imageViewPhotoPersonne)
+                updatePropositionButtons(propositions)
+            }
         }
     }
 
