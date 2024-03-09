@@ -45,11 +45,11 @@ class Gallery : AppCompatActivity(){
         // Vérifiez si nous avons reçu un bitmap non-null
         bitmap?.let { nonNullBitmap ->
             // Demandez le prénom après avoir pris la photo
-            askForFirstName { firstName ->
+            askForFirstName { firstName, gender ->
                 // Générez un nom de fichier unique pour la photo
                 val filename = UUID.randomUUID().toString()
                 // Essayez d'enregistrer la photo avec le prénom dans le stockage interne
-                val isSavedSuccessfully = savePhotoToInternalStorage(filename, nonNullBitmap, firstName)
+                val isSavedSuccessfully = savePhotoToInternalStorage(filename, nonNullBitmap, firstName, gender?: "Non spécifié")
                 if(isSavedSuccessfully) {
                     // Si la sauvegarde a réussi, rechargez les photos et affichez un message
                     loadPhotosFromInternalStorageIntoRecyclerView()
@@ -62,19 +62,31 @@ class Gallery : AppCompatActivity(){
         } ?: Toast.makeText(this, "No photo captured", Toast.LENGTH_SHORT).show() // Gérez le cas où `bitmap` est null
     }
 
-    private fun askForFirstName(afterNameProvided: (String) -> Unit) {
+    private fun askForFirstName(afterNameProvided: (String, String) -> Unit) {
         val input = EditText(this)
         AlertDialog.Builder(this)
             .setTitle("Entrez le prénom")
             .setMessage("Entrez le prénom de la personne sur la photo.")
             .setView(input)
-            .setPositiveButton("Save") { dialog, which ->
-                val name = input.text.toString()
-                if(name.isNotBlank()) {
-                    afterNameProvided(name)
+            .setPositiveButton("Next") { dialog, which ->
+                val firstName = input.text.toString()
+                if(firstName.isNotBlank()) {
+                    askForGender { gender ->
+                        afterNameProvided(firstName, gender)
+                    }
                 }
             }
             .setNegativeButton("Cancel", { dialog, which -> dialog.cancel() })
+            .show()
+    }
+
+    private fun askForGender(afterGenderProvided: (String) -> Unit) {
+        val gender = arrayOf("Homme", "Femme", "Non-binaire", "Non spécifié")
+        AlertDialog.Builder(this)
+            .setTitle("Sélectionnez le genre de la personne sur la photo")
+            .setItems(gender) { dialog, which ->
+                afterGenderProvided(gender[which])
+            }
             .show()
     }
 
@@ -163,15 +175,18 @@ class Gallery : AppCompatActivity(){
                 val bytes = it.readBytes()
                 val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
                 val filenameWithoutExtension = it.nameWithoutExtension
-                val namePatient = sharedPref.getString(filenameWithoutExtension, null)
-                namePatient?.let { np ->
-                    InternalStoragePhoto(it.name, bmp, np)
+                val namePatient = sharedPref.getString("$filenameWithoutExtension-name", null)
+                val gender = sharedPref.getString("$filenameWithoutExtension-gender", "Non spécifié") ?: "Non spécifié"
+                if (namePatient != null) {
+                    InternalStoragePhoto(it.name, bmp, namePatient, gender)
+                } else {
+                    null
                 }
             } ?: listOf()
         }
     }
 
-    private fun savePhotoToInternalStorage(filename: String, bmp: Bitmap, namePatient: String): Boolean {
+    private fun savePhotoToInternalStorage(filename: String, bmp: Bitmap, namePatient: String, gender : String): Boolean {
         // Le nom du fichier reste inchangé, seul pour la photo
         val completeFilename = "$filename.jpg"
         return try {
@@ -183,7 +198,8 @@ class Gallery : AppCompatActivity(){
             // Enregistrement du nom du patient dans les préférences partagées
             val sharedPref = getSharedPreferences("PhotoMetadata", MODE_PRIVATE)
             with(sharedPref.edit()) {
-                putString(filename, namePatient) // Utilisez le nom de la photo comme clé pour le nom du patient
+                putString("$filename-name", namePatient)
+                putString("$filename-gender", gender)
                 apply()
             }
             true
