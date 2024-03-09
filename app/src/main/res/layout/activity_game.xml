@@ -14,21 +14,22 @@
         android:layout_height="64dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.973"
+        app:layout_constraintVertical_bias="0.976"
         app:srcCompat="@drawable/baseline_home_24" />
 
     <ImageView
         android:id="@+id/imageViewLogo"
-        android:layout_width="86dp"
-        android:layout_height="92dp"
+        android:layout_width="108dp"
+        android:layout_height="103dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.021"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.025"
+        app:layout_constraintVertical_bias="0.023"
         app:srcCompat="@drawable/logoapp" />
 
     <TextView
@@ -36,19 +37,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/verdanabolditalic"
-        android:text="C'est le moment de jouer !"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
+        android:minHeight="48dp"
         android:shadowColor="#80000000"
         android:shadowDx="2"
         android:shadowDy="2"
         android:shadowRadius="10"
+        android:text="C'est le moment de jouer !"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.636"
+        app:layout_constraintHorizontal_bias="0.761"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.084" />
+        app:layout_constraintVertical_bias="0.102" />
 
     <TextView
         android:id="@+id/textViewPrenomPatient"
@@ -57,7 +59,8 @@
         android:fontFamily="@font/verdanabolditalic"
         android:text="Prenom Patient"
         android:textColor="#FFFFFF"
-        android:textSize="18sp"
+        android:minHeight="48dp"
+        android:textSize="20sp"
         android:shadowColor="#80000000"
         android:shadowDx="2"
         android:shadowDy="2"
@@ -71,17 +74,17 @@
 
     <ImageView
         android:id="@+id/imageViewPhotoPersonne"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="248dp"
+        android:layout_height="394dp"
         android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.5"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.389"
+        app:layout_constraintVertical_bias="0.32"
         app:layout_constraintWidth_percent="0.5" />
 
     <Button
@@ -100,56 +103,64 @@
 
     <Button
         android:id="@+id/buttonFirstChoice"
-        android:layout_width="82dp"
-        android:layout_height="32dp"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
         android:backgroundTint="#555555"
-        android:text="1"
-        android:textSize="10dp"
+        android:minHeight="48dp"
+        android:text="@string/button_first_choice"
+        android:textSize="20sp"
+        android:fontFamily="@font/verdana"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.31"
+        app:layout_constraintHorizontal_bias="0.159"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.759" />
+        app:layout_constraintVertical_bias="0.753" />
 
     <Button
         android:id="@+id/buttonSecondChoice"
-        android:layout_width="82dp"
-        android:layout_height="32dp"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
         android:backgroundTint="#555555"
-        android:text="2"
-        android:textSize="10dp"
+        android:minHeight="48dp"
+        android:textSize="20sp"
+        android:text="@string/button_second_choice"
+        android:fontFamily="@font/verdana"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.686"
+        app:layout_constraintHorizontal_bias="0.84"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.759" />
+        app:layout_constraintVertical_bias="0.753" />
 
     <Button
         android:id="@+id/buttonThirdChoice"
-        android:layout_width="82dp"
-        android:layout_height="32dp"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
         android:backgroundTint="#555555"
-        android:text="3"
-        android:textSize="10dp"
+        android:minHeight="48dp"
+        android:text="@string/button_third_choice"
+        android:textSize="20sp"
+        android:fontFamily="@font/verdana"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.31"
+        app:layout_constraintHorizontal_bias="0.16"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.869" />
 
     <Button
         android:id="@+id/buttonFourthChoice"
-        android:layout_width="82dp"
-        android:layout_height="32dp"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
         android:backgroundTint="#555555"
-        android:text="4"
-        android:textSize="10dp"
+        android:minHeight="48dp"
+        android:fontFamily="@font/verdana"
+        android:text="@string/button_fourth_choice"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.686"
+        app:layout_constraintHorizontal_bias="0.84"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.869" />

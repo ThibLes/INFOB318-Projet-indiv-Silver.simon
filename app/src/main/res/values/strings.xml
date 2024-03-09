@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">SilverSimon_ProjetIndiv</string>
     <string name="bonjour_patient">Bonjour %1$s,</string>
+
+    // bouton des jeux
+    <string name="button_first_choice">1</string>
+    <string name="button_second_choice">2</string>
+    <string name="button_third_choice">3</string>
+    <string name="button_fourth_choice">4</string>
 </resources>

@@ -5,9 +5,13 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -65,6 +69,7 @@ class Game : AppCompatActivity() {
                 randomPhotoId?.let {
                     setImageFromInternalStorage(it, imageViewPhotoPersonne)
                 }
+                Log.d("SavePhoto", "Saving name and gender with filename: $randomPhotoId") /// !!!!
                 setupGame()
             }
         }
@@ -98,29 +103,52 @@ class Game : AppCompatActivity() {
     }
 
     private fun getCorrectName(photoId: String): String {
+        val filename = photoId.substringBeforeLast(".") // car sinon le .jpg à la fin fait bug pour trouver les infos
         val sharedPreferences = getSharedPreferences("PhotoMetadata", Context.MODE_PRIVATE)
-        return sharedPreferences.getString("$photoId-name", "Inconnu") ?: "Inconnu"
-
+        return sharedPreferences.getString("$filename-name", "Inconnu") ?: "Inconnu"
     }
 
     private fun getCorrectGenre(photoId: String): String {
+        val filename = photoId.substringBeforeLast(".")
         val sharedPreferences = getSharedPreferences("PhotoMetadata", Context.MODE_PRIVATE)
-        return sharedPreferences.getString("$photoId-gender", "nonGenre") ?: "nonGenre"
+        return sharedPreferences.getString("$filename-gender", "nonGenre") ?: "nonGenre"
     }
 
-    private fun updatePropositionButtons(propositions: List<String>) {
-        val buttonFirstChoice = findViewById<Button>(R.id.buttonFirstChoice)
-        val buttonSecondChoice = findViewById<Button>(R.id.buttonSecondChoice)
-        val buttonThirdChoice = findViewById<Button>(R.id.buttonThirdChoice)
-        val buttonFourthChoice = findViewById<Button>(R.id.buttonFourthChoice)
+    private fun PropositionButtons(propositions: List<String>,correctName: String) {
 
-        // donne proposition aux boutons
-        buttonFirstChoice.text = propositions[0]
-        buttonSecondChoice.text = propositions[1]
-        buttonThirdChoice.text = propositions[2]
-        buttonFourthChoice.text = propositions[3]
+        val buttons = listOf(
+            findViewById<Button>(R.id.buttonFirstChoice),
+            findViewById<Button>(R.id.buttonSecondChoice),
+            findViewById<Button>(R.id.buttonThirdChoice),
+            findViewById<Button>(R.id.buttonFourthChoice)
+        )
 
-        // Tu peux aussi ajouter des écouteurs d'événements ici pour gérer les clics sur les boutons
+        // Mélange des propositions avec la réponse correcte à chaque appel
+        val shuffledPropositions = propositions.shuffled()
+
+        // Affectation des propositions mélangées aux boutons et ajout d'écouteurs d'événements
+        buttons.forEachIndexed { index, button ->
+            button.text = shuffledPropositions[index]
+            button.setOnClickListener { clickedButton ->
+                val isCorrect = button.text == correctName
+                // Appliquer la couleur en fonction de la réponse
+                clickedButton.setBackgroundColor(
+                    ContextCompat.getColor(
+                        this, if (isCorrect) R.color.green else R.color.red
+                    )
+                )
+
+                // Créer un Handler pour rétablir la couleur initiale après 2 secondes
+                Handler(Looper.getMainLooper()).postDelayed({
+                    // Réinitialiser la couleur du bouton. Remplace `buttonOriginalColor` par la couleur d'origine de tes boutons.
+                    clickedButton.setBackgroundColor(ContextCompat.getColor(this, R.color.grey))
+                    // Si la réponse est correcte, tu peux ici passer à la question suivante ou effectuer toute autre action souhaitée.
+                    if (isCorrect) {
+                        // Actions à effectuer après une réponse correcte, par exemple, charger la nouvelle question.
+                    }
+                }, 2000) // 2000 millisecondes = 2 secondes
+            }
+        }
     }
 
     private fun setupGame() {
@@ -133,11 +161,12 @@ class Game : AppCompatActivity() {
                 val propositions = question.generateQuestion(correctGenre, correctName)
 
                 setImageFromInternalStorage(it, imageViewPhotoPersonne)
-                updatePropositionButtons(propositions)
+                PropositionButtons(propositions,correctName)
+                Log.d("GameActivity", "Nom récupéré: ${randomPhotoId}")
+                Log.d("GameActivity", "Nom récupéré: ${getCorrectName(randomPhotoId)}")
+                Log.d("GameActivity", "Genre récupéré: ${getCorrectGenre(randomPhotoId)}")
             }
         }
     }
-
-
 
 }

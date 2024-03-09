@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Log
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
@@ -195,11 +196,14 @@ class Gallery : AppCompatActivity(){
                     throw IOException("Couldn't save bitmap.")
                 }
             }
-            // Enregistrement du nom du patient dans les préférences partagées
+            // Enregistrement du nom du patient + genre dans les préférences partagées
             val sharedPref = getSharedPreferences("PhotoMetadata", MODE_PRIVATE)
             with(sharedPref.edit()) {
                 putString("$filename-name", namePatient)
                 putString("$filename-gender", gender)
+                Log.d("SavePhoto", "gender photo saved: $gender") /// !!!!
+
+
                 apply()
             }
             true

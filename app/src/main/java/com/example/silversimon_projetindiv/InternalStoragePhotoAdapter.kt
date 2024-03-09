@@ -38,7 +38,7 @@ class InternalStoragePhotoAdapter(
         val photo = currentList[position]
         holder.binding.apply {
             ivPhoto.setImageBitmap(photo.bmp)
-            tvPhotoName.text = photo.namePatient // Ajoutez cette ligne pour définir le nom
+            tvPhotoName.text = photo.namePatient
 
             val aspectRatio = photo.bmp.width.toFloat() / photo.bmp.height.toFloat()
             ConstraintSet().apply {
