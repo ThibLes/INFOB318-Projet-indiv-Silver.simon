@@ -57,20 +57,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/verdanabolditalic"
-        android:text="Prenom Patient"
-        android:textColor="#FFFFFF"
         android:minHeight="48dp"
-        android:textSize="20sp"
         android:shadowColor="#80000000"
         android:shadowDx="2"
         android:shadowDy="2"
         android:shadowRadius="10"
+        android:text="Prenom Patient"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.363"
+        app:layout_constraintHorizontal_bias="0.395"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.048" />
+        app:layout_constraintVertical_bias="0.049" />
 
     <ImageView
         android:id="@+id/imageViewPhotoPersonne"
@@ -86,20 +86,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.32"
         app:layout_constraintWidth_percent="0.5" />
-
-    <Button
-        android:id="@+id/buttonNext"
-        android:layout_width="82dp"
-        android:layout_height="32dp"
-        android:backgroundTint="#555555"
-        android:text="Suivant"
-        android:textSize="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.981"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.569" />
 
     <Button
         android:id="@+id/buttonFirstChoice"

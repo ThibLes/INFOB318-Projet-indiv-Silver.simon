@@ -1,6 +1,7 @@
 package com.example.silversimon_projetindiv
 
 import android.annotation.SuppressLint
+import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -73,10 +74,15 @@ class Parameters : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val optionsSlideRight = ActivityOptions.makeCustomAnimation(
+            this,
+            R.anim.slide_in_right,
+            R.anim.slide_out_left
+        )
         // Aller Galerie
         buttonGallery.setOnClickListener {
             val intent = Intent(this, Gallery::class.java)
-            startActivity(intent)
+            startActivity(intent, optionsSlideRight.toBundle())
         }
 
     }

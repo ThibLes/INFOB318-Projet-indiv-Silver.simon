@@ -1,5 +1,6 @@
 package com.example.silversimon_projetindiv
 
+import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -26,13 +27,21 @@ class Game : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        setupGame()
+        loadNextImage()
+
+        val optionsSlideLeft = ActivityOptions.makeCustomAnimation(
+            this,
+            R.anim.slide_in_left,
+            R.anim.slide_out_right
+        )
+
+
 
         // Retourner au début
         val buttonHome = findViewById<ImageView>(R.id.imageHome)
         buttonHome.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+            startActivity(intent,optionsSlideLeft.toBundle())
         }
 
         val textViewPrenomPatient = findViewById<TextView>(R.id.textViewPrenomPatient)
@@ -42,9 +51,6 @@ class Game : AppCompatActivity() {
 
         // Définir le texte de textViewPrenomPatient pour inclure le prénom du patient
         textViewPrenomPatient.text = getString(R.string.bonjour_patient, prenomPatient)
-
-        // récuperer le bouton suivvant
-        val buttonNext = findViewById<Button>(R.id.buttonNext)
 
         question = Question(this)
 
@@ -57,20 +63,6 @@ class Game : AppCompatActivity() {
                 val propositions = question.generateQuestion(correctGenre,correctName)
 
                 setImageFromInternalStorage(it, imageViewPhotoPersonne)
-            }
-        }
-
-        // permet de relancer les photos
-        buttonNext.setOnClickListener {
-            // Utilise lifecycleScope pour lancer une coroutine qui exécute la logique de chargement d'une nouvelle image
-            lifecycleScope.launch {
-                val imageViewPhotoPersonne = findViewById<ImageView>(R.id.imageViewPhotoPersonne)
-                val randomPhotoId = getRandomPhotoIdFromInternalStorage()
-                randomPhotoId?.let {
-                    setImageFromInternalStorage(it, imageViewPhotoPersonne)
-                }
-                Log.d("SavePhoto", "Saving name and gender with filename: $randomPhotoId") /// !!!!
-                setupGame()
             }
         }
 
@@ -114,6 +106,18 @@ class Game : AppCompatActivity() {
         return sharedPreferences.getString("$filename-gender", "nonGenre") ?: "nonGenre"
     }
 
+    // permet de relancer les photos
+    private fun loadNextImage() {
+        // Utilise lifecycleScope pour lancer une coroutine qui exécute la logique de chargement d'une nouvelle image
+        lifecycleScope.launch {
+            val imageViewPhotoPersonne = findViewById<ImageView>(R.id.imageViewPhotoPersonne)
+            val randomPhotoId = getRandomPhotoIdFromInternalStorage()
+            randomPhotoId?.let {
+                setImageFromInternalStorage(it, imageViewPhotoPersonne)
+            }
+            setupGame()
+        }
+    }
     private fun PropositionButtons(propositions: List<String>,correctName: String) {
 
         val buttons = listOf(
@@ -144,9 +148,9 @@ class Game : AppCompatActivity() {
                     clickedButton.setBackgroundColor(ContextCompat.getColor(this, R.color.grey))
                     // Si la réponse est correcte, tu peux ici passer à la question suivante ou effectuer toute autre action souhaitée.
                     if (isCorrect) {
-                        // Actions à effectuer après une réponse correcte, par exemple, charger la nouvelle question.
+                        loadNextImage()
                     }
-                }, 2000) // 2000 millisecondes = 2 secondes
+                }, 1500) // 2000 millisecondes = 2 secondes
             }
         }
     }

@@ -2,6 +2,7 @@ package com.example.silversimon_projetindiv
 
 import android.content.Intent
 import android.Manifest
+import android.app.ActivityOptions
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -105,18 +106,29 @@ class Gallery : AppCompatActivity(){
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_REQUEST_CODE)
         }
 
+        val optionsSlideUp = ActivityOptions.makeCustomAnimation(
+            this,
+            R.anim.slide_in_bottom,
+            R.anim.slide_out_up
+        )
         val buttonHome = findViewById<ImageView>(R.id.imageHome)
         // Retourner au début
         buttonHome.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+            startActivity(intent,optionsSlideUp.toBundle())
         }
 
+
+        val optionsSlideLeft = ActivityOptions.makeCustomAnimation(
+            this,
+            R.anim.slide_in_left,
+            R.anim.slide_out_right
+        )
         val buttonBack = findViewById<ImageView>(R.id.backImg)
         // Retourner aux paramètres
         buttonBack.setOnClickListener {
             val intent = Intent(this, Parameters::class.java)
-            startActivity(intent)
+            startActivity(intent,optionsSlideLeft.toBundle())
         }
 
         internalStoragePhotoAdapter = InternalStoragePhotoAdapter { photo ->
