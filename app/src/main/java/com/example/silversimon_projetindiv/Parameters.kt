@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Switch
 import android.widget.Toast
 
 class Parameters : AppCompatActivity() {
@@ -25,13 +26,14 @@ class Parameters : AppCompatActivity() {
 
         val buttonHome = findViewById<ImageView>(R.id.imageHome)
 
-        val buttonModifierCode = findViewById<Button>(R.id.buttonModifierCode)
-        val editTextNewCode = findViewById<EditText>(R.id.editTextNewCode)
 
         val buttonGallery = findViewById<Button>(R.id.buttonGalerie)
         //test
 
-
+        val switchEasy: Switch = findViewById(R.id.switchEasy)
+        val switchMedium: Switch = findViewById(R.id.switchMedium)
+        val switchHard: Switch = findViewById(R.id.switchHard)
+        val AllSwitch = listOf(switchEasy, switchMedium, switchHard)
 
         // Changer les prénoms des patients
         editTextPrenomPatient.setText(prenomPseudo)
@@ -47,43 +49,33 @@ class Parameters : AppCompatActivity() {
         }
 
 
-
-        // code mis sur emulateur 1234
-        buttonModifierCode.setOnClickListener {
-            val newCode = editTextNewCode.text.toString()
-            if(newCode.isNotEmpty()) {
-                // Enregistrer le nouveau code dans SharedPreferences
-                val sharedPreferences = getSharedPreferences("AppPreferences", MODE_PRIVATE)
-                val editor = sharedPreferences.edit()
-                editor.putString("AccessCode", newCode)
-                editor.apply()
-
-                // Informer l'utilisateur que le code a été changé
-                Toast.makeText(this, "Le nouveau code a été enregistré.", Toast.LENGTH_SHORT).show()
-            } else {
-                // Demander à l'utilisateur d'entrer un code s'il est vide
-                Toast.makeText(this, "Veuillez entrer un nouveau code", Toast.LENGTH_SHORT).show()
+        AllSwitch.forEach { switch ->
+            switch.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    AllSwitch.forEach { otherSwitch ->
+                        if (otherSwitch != switch) otherSwitch.isChecked = false
+                    }
+                }
             }
+
+
+            // Retourner au début
+            buttonHome.setOnClickListener {
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+            }
+
+            val optionsSlideRight = ActivityOptions.makeCustomAnimation(
+                this,
+                R.anim.slide_in_right,
+                R.anim.slide_out_left
+            )
+            // Aller Galerie
+            buttonGallery.setOnClickListener {
+                val intent = Intent(this, Gallery::class.java)
+                startActivity(intent, optionsSlideRight.toBundle())
+            }
+
         }
-
-
-
-        // Retourner au début
-        buttonHome.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-        }
-
-        val optionsSlideRight = ActivityOptions.makeCustomAnimation(
-            this,
-            R.anim.slide_in_right,
-            R.anim.slide_out_left
-        )
-        // Aller Galerie
-        buttonGallery.setOnClickListener {
-            val intent = Intent(this, Gallery::class.java)
-            startActivity(intent, optionsSlideRight.toBundle())
-        }
-
     }
 }

@@ -106,7 +106,7 @@ class Game : AppCompatActivity() {
         return sharedPreferences.getString("$filename-gender", "nonGenre") ?: "nonGenre"
     }
 
-    // permet de relancer les photos
+    // permet de relancer les photos et setup le jeu
     private fun loadNextImage() {
         // Utilise lifecycleScope pour lancer une coroutine qui exécute la logique de chargement d'une nouvelle image
         lifecycleScope.launch {

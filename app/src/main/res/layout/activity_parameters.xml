@@ -7,6 +7,53 @@
     android:background="#E8C36A"
     tools:context=".Parameters">
 
+    <Switch
+        android:id="@+id/switchMedium"
+        android:layout_width="196dp"
+        android:layout_height="30dp"
+        android:text="Moyen"
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.134"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.604" />
+
+    <Switch
+        android:id="@+id/switchHard"
+        android:layout_width="196dp"
+        android:layout_height="30dp"
+        android:text="Difficile"
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.134"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.679" />
+
+    <TextView
+        android:id="@+id/textDifficulty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/verdana"
+        android:text="Difficulté du jeu"
+        android:textColor="#FFFFFF"
+        android:textSize="25sp"
+        android:shadowColor="#000000"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="10"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.137"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.472" />
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="126dp"
@@ -45,28 +92,17 @@
         android:fontFamily="@font/verdana"
         android:text="Prénom du patient"
         android:textColor="#FFFFFF"
-        android:textSize="20sp"
+        android:textSize="25sp"
+        android:shadowColor="#000000"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="10"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.122"
+        app:layout_constraintHorizontal_bias="0.163"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.27" />
-
-    <TextView
-        android:id="@+id/textPrenomPatient2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/verdana"
-        android:text="Modificaton du  code"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.135"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.415" />
+        app:layout_constraintVertical_bias="0.261" />
 
     <EditText
         android:id="@+id/editTextPrenom"
@@ -82,21 +118,6 @@
         app:layout_constraintTop_toBottomOf="@+id/textPrenomPatient"
         app:layout_constraintVertical_bias="0.016" />
 
-    <EditText
-        android:id="@+id/editTextNewCode"
-        android:layout_width="224dp"
-        android:layout_height="38dp"
-        android:layout_marginTop="12dp"
-        android:hint="Nouveau code"
-        android:inputType="numberPassword"
-        android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.144"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textPrenomPatient2"
-        app:layout_constraintVertical_bias="0.0" />
-
     <Button
         android:id="@+id/buttonEnregistrer"
         android:layout_width="145dp"
@@ -109,21 +130,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.326" />
 
-
-    <Button
-        android:id="@+id/buttonModifierCode"
-        android:layout_width="145dp"
-        android:layout_height="34dp"
-        android:layout_marginEnd="12dp"
-        android:backgroundTint="#555555"
-        android:text="Modifier Code"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageHome"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.454"
-        app:layout_constraintStart_toEndOf="@+id/editTextNewCode"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.489" />
 
     <Button
         android:id="@+id/buttonGalerie"
@@ -155,5 +161,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:constraint_referenced_ids="imageHome" />
+
+    <Switch
+        android:id="@+id/switchEasy"
+        android:layout_width="196dp"
+        android:layout_height="30dp"
+        android:text="Facile"
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.134"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.532" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

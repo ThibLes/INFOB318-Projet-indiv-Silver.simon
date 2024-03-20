@@ -51,7 +51,7 @@ class Gallery : AppCompatActivity(){
                 // Générez un nom de fichier unique pour la photo
                 val filename = UUID.randomUUID().toString()
                 // Essayez d'enregistrer la photo avec le prénom dans le stockage interne
-                val isSavedSuccessfully = savePhotoToInternalStorage(filename, nonNullBitmap, firstName, gender?: "Non spécifié")
+                val isSavedSuccessfully = savePhotoToInternalStorage(filename, nonNullBitmap, firstName, gender?: "Non spécifié",5)
                 if(isSavedSuccessfully) {
                     // Si la sauvegarde a réussi, rechargez les photos et affichez un message
                     loadPhotosFromInternalStorageIntoRecyclerView()
@@ -190,8 +190,9 @@ class Gallery : AppCompatActivity(){
                 val filenameWithoutExtension = it.nameWithoutExtension
                 val namePatient = sharedPref.getString("$filenameWithoutExtension-name", null)
                 val gender = sharedPref.getString("$filenameWithoutExtension-gender", "Non spécifié") ?: "Non spécifié"
+                val coff = sharedPref.getInt("$filenameWithoutExtension-coff", 5)
                 if (namePatient != null) {
-                    InternalStoragePhoto(it.name, bmp, namePatient, gender)
+                    InternalStoragePhoto(it.name, bmp, namePatient, gender, coff)
                 } else {
                     null
                 }
@@ -199,7 +200,7 @@ class Gallery : AppCompatActivity(){
         }
     }
 
-    private fun savePhotoToInternalStorage(filename: String, bmp: Bitmap, namePatient: String, gender : String): Boolean {
+    private fun savePhotoToInternalStorage(filename: String, bmp: Bitmap, namePatient: String, gender : String, coff : Int): Boolean {
         // Le nom du fichier reste inchangé, seul pour la photo
         val completeFilename = "$filename.jpg"
         return try {
@@ -213,7 +214,8 @@ class Gallery : AppCompatActivity(){
             with(sharedPref.edit()) {
                 putString("$filename-name", namePatient)
                 putString("$filename-gender", gender)
-                Log.d("SavePhoto", "gender photo saved: $gender") /// !!!!
+                putInt("$filename-coff", coff)
+
 
 
                 apply()

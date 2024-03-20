@@ -7,5 +7,6 @@ data class InternalStoragePhoto(
     val name: String,
     val bmp: Bitmap,
     val namePatient : String,
-    val gender : String
+    val gender : String,
+    val coff : Int
 )
