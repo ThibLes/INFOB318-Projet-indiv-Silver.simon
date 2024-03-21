@@ -173,4 +173,18 @@ class Game : AppCompatActivity() {
         }
     }
 
+    fun updatePhotoCoff(photoname: String, isCorrect: Boolean) {
+        val sharedPref = getSharedPreferences("PhotoMetadata", MODE_PRIVATE)
+        val currentCoff = sharedPref.getInt("$photoname-coff", 5)
+        val newCoff = when {
+            isCorrect && currentCoff > 1 -> currentCoff - 1
+            !isCorrect && currentCoff < 10 -> currentCoff + 1
+            else -> currentCoff
+        }
+        with(sharedPref.edit()) {
+            putInt("$photoname-coff", newCoff)
+            apply()
+        }
+    }
+
 }
