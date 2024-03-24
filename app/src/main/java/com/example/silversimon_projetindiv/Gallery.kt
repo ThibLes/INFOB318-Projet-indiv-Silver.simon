@@ -33,7 +33,7 @@ import java.util.UUID
 
  Avantage --> besoin de aucune permission
  */
-class Gallery : AppCompatActivity(){
+class   Gallery : AppCompatActivity(){
 
     companion object {
         const val CAMERA_PERMISSION_REQUEST_CODE = 1001

@@ -50,14 +50,21 @@ class Parameters : AppCompatActivity() {
 
 
         AllSwitch.forEach { switch ->
-            switch.setOnCheckedChangeListener { _, isChecked ->
+            switch.setOnCheckedChangeListener { idbutton, isChecked ->
                 if (isChecked) {
                     AllSwitch.forEach { otherSwitch ->
                         if (otherSwitch != switch) otherSwitch.isChecked = false
                     }
+                    val difficultyGame = when (idbutton.id) {
+                        R.id.switchEasy -> "easy"
+                        R.id.switchMedium -> "moyen"
+                        R.id.switchHard -> "difficile"
+                        else -> "normal"
+                    }
+                    saveDifficulty(difficultyGame)
                 }
             }
-
+        }
 
             // Retourner au début
             buttonHome.setOnClickListener {
@@ -77,5 +84,13 @@ class Parameters : AppCompatActivity() {
             }
 
         }
+
+       private fun saveDifficulty(level: String) {
+            val sharedPref = getSharedPreferences("GameDifficulty", MODE_PRIVATE)
+            with(sharedPref.edit()) {
+                putString("Difficulty", level)
+                apply()
+            }
+
+        }
     }
-}

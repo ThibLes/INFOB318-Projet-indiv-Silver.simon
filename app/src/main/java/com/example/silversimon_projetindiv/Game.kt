@@ -35,7 +35,7 @@ class Game : AppCompatActivity() {
             R.anim.slide_out_right
         )
 
-
+        val difficultyLevel = getDifficultyLevel()
 
         // Retourner au début
         val buttonHome = findViewById<ImageView>(R.id.imageHome)
@@ -172,8 +172,11 @@ class Game : AppCompatActivity() {
             }
         }
     }
-
-    fun updatePhotoCoff(photoname: String, isCorrect: Boolean) {
+    fun getDifficultyLevel(): String {
+        val sharedPreferences = getSharedPreferences("GameDifficulty", Context.MODE_PRIVATE)
+        return sharedPreferences.getString("Difficulty", "normal") ?: "normal"
+    }
+    fun getPhotoCoff(photoname: String, isCorrect: Boolean) {
         val sharedPref = getSharedPreferences("PhotoMetadata", MODE_PRIVATE)
         val currentCoff = sharedPref.getInt("$photoname-coff", 5)
         val newCoff = when {
