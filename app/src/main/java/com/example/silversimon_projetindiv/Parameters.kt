@@ -35,6 +35,8 @@ class Parameters : AppCompatActivity() {
         val switchHard: Switch = findViewById(R.id.switchHard)
         val AllSwitch = listOf(switchEasy, switchMedium, switchHard)
 
+        restoreSwitchState(AllSwitch)
+
         // Changer les prénoms des patients
         editTextPrenomPatient.setText(prenomPseudo)
         buttonEnregistrer.setOnClickListener {
@@ -47,6 +49,7 @@ class Parameters : AppCompatActivity() {
 
             Toast.makeText(this, "Modifications enregistrées", Toast.LENGTH_SHORT).show()
         }
+
 
 
         AllSwitch.forEach { switch ->
@@ -62,6 +65,10 @@ class Parameters : AppCompatActivity() {
                         else -> "normal"
                     }
                     saveDifficulty(difficultyGame)
+                } else {
+                    if (AllSwitch.none { it.isChecked }) {
+                        saveDifficulty("normal")
+                    }
                 }
             }
         }
@@ -85,7 +92,7 @@ class Parameters : AppCompatActivity() {
 
         }
 
-       private fun saveDifficulty(level: String) {
+         private fun saveDifficulty(level: String) {
             val sharedPref = getSharedPreferences("GameDifficulty", MODE_PRIVATE)
             with(sharedPref.edit()) {
                 putString("Difficulty", level)
@@ -93,4 +100,24 @@ class Parameters : AppCompatActivity() {
             }
 
         }
-    }
+
+        private fun getDifficultyLevel(): String {
+            val sharedPreferences = getSharedPreferences("GameDifficulty", Context.MODE_PRIVATE)
+            return sharedPreferences.getString("Difficulty", "normal") ?: "normal"
+        }
+
+        private fun restoreSwitchState(AllSwitch: List<Switch>) {
+            val currentDifficulty = getDifficultyLevel()
+
+            // Désactive tous les switches avant de restaurer l'état
+            AllSwitch.forEach { it.isChecked = false }
+
+            when (currentDifficulty) {
+                "easy" -> AllSwitch[0].isChecked = true
+                "moyen" -> AllSwitch[1].isChecked = true
+                "difficile" -> AllSwitch[2].isChecked = true
+            }
+        }
+
+
+}

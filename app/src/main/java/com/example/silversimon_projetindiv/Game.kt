@@ -22,6 +22,7 @@ import java.io.IOException
 class Game : AppCompatActivity() {
 
     private lateinit var question: Question
+    private var randomPhotoId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +36,6 @@ class Game : AppCompatActivity() {
             R.anim.slide_out_right
         )
 
-        val difficultyLevel = getDifficultyLevel()
 
         // Retourner au début
         val buttonHome = findViewById<ImageView>(R.id.imageHome)
@@ -68,15 +68,26 @@ class Game : AppCompatActivity() {
 
     }
     private suspend fun getRandomPhotoIdFromInternalStorage(): String? {
+        val difficultyLevel = getDifficultyLevel()
         return withContext(Dispatchers.IO) {
             val files = applicationContext.filesDir.listFiles { _, name -> name.endsWith(".jpg") }
-            files?.let {
-                if (it.isNotEmpty()) {
-                    val randomIndex = it.indices.random()
-                    it[randomIndex].name
-                } else {
-                    null // Retourne null si aucun fichier n'est trouvé
-                }
+            files?.let { fileList ->
+                when (difficultyLevel) {
+                    "facile" -> fileList.filter { file ->
+                        val coff = getPhotoCoff(file.nameWithoutExtension)
+                        coff <= 3
+                    }
+                    "moyen" -> fileList.filter { file ->
+                        val coff = getPhotoCoff(file.nameWithoutExtension)
+                        coff in 4..7
+                    }
+                    "difficile" -> fileList.filter { file ->
+                        val coff = getPhotoCoff(file.nameWithoutExtension)
+                        coff >= 8
+                    }
+                    "normal" -> fileList.toList()
+                    else -> fileList.toList()
+                }.randomOrNull()?.name
             }
         }
     }
@@ -108,7 +119,6 @@ class Game : AppCompatActivity() {
 
     // permet de relancer les photos et setup le jeu
     private fun loadNextImage() {
-        // Utilise lifecycleScope pour lancer une coroutine qui exécute la logique de chargement d'une nouvelle image
         lifecycleScope.launch {
             val imageViewPhotoPersonne = findViewById<ImageView>(R.id.imageViewPhotoPersonne)
             val randomPhotoId = getRandomPhotoIdFromInternalStorage()
@@ -118,7 +128,7 @@ class Game : AppCompatActivity() {
             setupGame()
         }
     }
-    private fun PropositionButtons(propositions: List<String>,correctName: String) {
+    private suspend fun PropositionButtons(propositions: List<String>, correctName: String) {
 
         val buttons = listOf(
             findViewById<Button>(R.id.buttonFirstChoice),
@@ -126,11 +136,9 @@ class Game : AppCompatActivity() {
             findViewById<Button>(R.id.buttonThirdChoice),
             findViewById<Button>(R.id.buttonFourthChoice)
         )
-
-        // Mélange des propositions avec la réponse correcte à chaque appel
+        val randomPhotoId = getRandomPhotoIdFromInternalStorage()
         val shuffledPropositions = propositions.shuffled()
 
-        // Affectation des propositions mélangées aux boutons et ajout d'écouteurs d'événements
         buttons.forEachIndexed { index, button ->
             button.text = shuffledPropositions[index]
             button.setOnClickListener { clickedButton ->
@@ -142,15 +150,19 @@ class Game : AppCompatActivity() {
                     )
                 )
 
+
+                val photoNameWithoutExtension = randomPhotoId?.substringBeforeLast(".")
+                if (photoNameWithoutExtension != null) {
+                    changePhotoCoff(randomPhotoId, isCorrect)
+                }
+
                 // Créer un Handler pour rétablir la couleur initiale après 2 secondes
                 Handler(Looper.getMainLooper()).postDelayed({
-                    // Réinitialiser la couleur du bouton. Remplace `buttonOriginalColor` par la couleur d'origine de tes boutons.
                     clickedButton.setBackgroundColor(ContextCompat.getColor(this, R.color.grey))
-                    // Si la réponse est correcte, tu peux ici passer à la question suivante ou effectuer toute autre action souhaitée.
                     if (isCorrect) {
                         loadNextImage()
                     }
-                }, 1500) // 2000 millisecondes = 2 secondes
+                }, 1500)
             }
         }
     }
@@ -166,17 +178,24 @@ class Game : AppCompatActivity() {
 
                 setImageFromInternalStorage(it, imageViewPhotoPersonne)
                 PropositionButtons(propositions,correctName)
+
+                // SUPPRIMER LOG APRES
                 Log.d("GameActivity", "Nom récupéré: ${randomPhotoId}")
                 Log.d("GameActivity", "Nom récupéré: ${getCorrectName(randomPhotoId)}")
                 Log.d("GameActivity", "Genre récupéré: ${getCorrectGenre(randomPhotoId)}")
+
+                // Récupération et log du coff de la photo
+                val photoCoff = getPhotoCoff(it.substringBeforeLast("."))
+                Log.d("GameActivity", "Coefficient (Coff) de la photo: $photoCoff")
             }
         }
     }
-    fun getDifficultyLevel(): String {
+    private fun getDifficultyLevel(): String {
         val sharedPreferences = getSharedPreferences("GameDifficulty", Context.MODE_PRIVATE)
         return sharedPreferences.getString("Difficulty", "normal") ?: "normal"
     }
-    fun getPhotoCoff(photoname: String, isCorrect: Boolean) {
+    private fun changePhotoCoff(filename: String, isCorrect: Boolean) {
+        val photoname = getPhotoCoff(filename.substringBeforeLast("."))
         val sharedPref = getSharedPreferences("PhotoMetadata", MODE_PRIVATE)
         val currentCoff = sharedPref.getInt("$photoname-coff", 5)
         val newCoff = when {
@@ -188,6 +207,11 @@ class Game : AppCompatActivity() {
             putInt("$photoname-coff", newCoff)
             apply()
         }
+    }
+
+    private fun getPhotoCoff(photoname: String): Int {
+        val sharedPreferences = getSharedPreferences("PhotoMetadata", Context.MODE_PRIVATE)
+        return sharedPreferences.getInt("$photoname-coff", 5)
     }
 
 }
