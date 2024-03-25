@@ -4,6 +4,7 @@ import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -22,13 +23,14 @@ import java.io.IOException
 class Game : AppCompatActivity() {
 
     private lateinit var question: Question
-    private var randomPhotoId: String? = null
+    private var incorrectTry = mutableMapOf<String,Boolean>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
         loadNextImage()
+
 
         val optionsSlideLeft = ActivityOptions.makeCustomAnimation(
             this,
@@ -62,7 +64,7 @@ class Game : AppCompatActivity() {
                 val correctGenre = getCorrectGenre(it)
                 val propositions = question.generateQuestion(correctGenre,correctName)
 
-                setImageFromInternalStorage(it, imageViewPhotoPersonne)
+                // setImageFromInternalStorage(it, imageViewPhotoPersonne)
             }
         }
 
@@ -138,31 +140,51 @@ class Game : AppCompatActivity() {
         )
         val randomPhotoId = getRandomPhotoIdFromInternalStorage()
         val shuffledPropositions = propositions.shuffled()
-
-        buttons.forEachIndexed { index, button ->
-            button.text = shuffledPropositions[index]
-            button.setOnClickListener { clickedButton ->
-                val isCorrect = button.text == correctName
-                // Appliquer la couleur en fonction de la réponse
-                clickedButton.setBackgroundColor(
-                    ContextCompat.getColor(
-                        this, if (isCorrect) R.color.green else R.color.red
-                    )
-                )
-
-
-                val photoNameWithoutExtension = randomPhotoId?.substringBeforeLast(".")
-                if (photoNameWithoutExtension != null) {
-                    changePhotoCoff(randomPhotoId, isCorrect)
-                }
-
-                // Créer un Handler pour rétablir la couleur initiale après 2 secondes
-                Handler(Looper.getMainLooper()).postDelayed({
-                    clickedButton.setBackgroundColor(ContextCompat.getColor(this, R.color.grey))
-                    if (isCorrect) {
-                        loadNextImage()
+        if (randomPhotoId != null ) {
+            buttons.forEachIndexed { index, button ->
+                button.text = shuffledPropositions[index]
+                button.setOnClickListener { clickedButton ->
+                    val isCorrect = button.text == correctName
+                    if (!isCorrect) {
+                        incorrectTry[randomPhotoId] = true
+                        Log.d("GameActivity", "dedans : ${randomPhotoId}")
                     }
-                }, 1500)
+
+                    // Appliquer la couleur en fonction de la réponse
+                    clickedButton.setBackgroundColor(
+                        ContextCompat.getColor(
+                            this, if (isCorrect) R.color.green else R.color.red
+                        )
+                    )
+
+                    if (isCorrect) {
+                        val musique = MediaPlayer.create(applicationContext, R.raw.goodanswer)
+                        musique.setOnCompletionListener { mp -> mp.release() }
+                        musique.start()
+                    }
+                    Log.d("GameActivity", "ok ou non: ${isCorrect}")
+
+
+                    if (isCorrect && incorrectTry[randomPhotoId] == true) {
+                        incorrectTry.remove(randomPhotoId)
+                        Log.d("GameActivity", "out : ${randomPhotoId}")
+                    } else if (isCorrect) {
+                        changePhotoCoff(randomPhotoId, true)
+                    } else {
+                        if (incorrectTry[randomPhotoId] != true) {
+                            incorrectTry[randomPhotoId] = true
+                            Log.d("GameActivity", "wytusfqytxf : ${randomPhotoId}")
+                            changePhotoCoff(randomPhotoId, false)
+                        }
+                    }
+
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        clickedButton.setBackgroundColor(ContextCompat.getColor(this, R.color.grey))
+                        if (isCorrect) {
+                            loadNextImage()
+                        }
+                    }, 1500)
+                }
             }
         }
     }
@@ -179,30 +201,26 @@ class Game : AppCompatActivity() {
                 setImageFromInternalStorage(it, imageViewPhotoPersonne)
                 PropositionButtons(propositions,correctName)
 
-                // SUPPRIMER LOG APRES
-                Log.d("GameActivity", "Nom récupéré: ${randomPhotoId}")
-                Log.d("GameActivity", "Nom récupéré: ${getCorrectName(randomPhotoId)}")
-                Log.d("GameActivity", "Genre récupéré: ${getCorrectGenre(randomPhotoId)}")
-
-                // Récupération et log du coff de la photo
-                val photoCoff = getPhotoCoff(it.substringBeforeLast("."))
-                Log.d("GameActivity", "Coefficient (Coff) de la photo: $photoCoff")
             }
         }
     }
     private fun getDifficultyLevel(): String {
-        val sharedPreferences = getSharedPreferences("GameDifficulty", Context.MODE_PRIVATE)
-        return sharedPreferences.getString("Difficulty", "normal") ?: "normal"
+        val difficulty = getSharedPreferences("GameDifficulty", Context.MODE_PRIVATE)
+        return difficulty.getString("Difficulty", "normal") ?: "normal"
+        Log.d("GameActivity", "difficulté: ${difficulty}")
+
     }
     private fun changePhotoCoff(filename: String, isCorrect: Boolean) {
         val photoname = getPhotoCoff(filename.substringBeforeLast("."))
         val sharedPref = getSharedPreferences("PhotoMetadata", MODE_PRIVATE)
         val currentCoff = sharedPref.getInt("$photoname-coff", 5)
         val newCoff = when {
-            isCorrect && currentCoff > 1 -> currentCoff - 1
+            isCorrect && currentCoff > 1 -> currentCoff -1
             !isCorrect && currentCoff < 10 -> currentCoff + 1
             else -> currentCoff
         }
+        Log.d("GameActivity", "nouveaucoff: ${newCoff}")
+
         with(sharedPref.edit()) {
             putInt("$photoname-coff", newCoff)
             apply()
