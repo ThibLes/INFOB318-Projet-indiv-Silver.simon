@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -25,9 +26,8 @@ class Parameters : AppCompatActivity() {
         val prenomPseudo = sharedPreferences.getString("prenom", "")
 
         val buttonHome = findViewById<ImageView>(R.id.imageHome)
-
-
         val buttonGallery = findViewById<Button>(R.id.buttonGalerie)
+        val buttonReset = findViewById<Button>(R.id.rstNiveau)
         //test
 
         val switchEasy: Switch = findViewById(R.id.switchEasy)
@@ -79,6 +79,11 @@ class Parameters : AppCompatActivity() {
                 startActivity(intent)
             }
 
+            // reset les coff
+            buttonReset.setOnClickListener{
+                resetCoff()
+            }
+
             val optionsSlideRight = ActivityOptions.makeCustomAnimation(
                 this,
                 R.anim.slide_in_right,
@@ -117,6 +122,21 @@ class Parameters : AppCompatActivity() {
                 "moyen" -> AllSwitch[1].isChecked = true
                 "difficile" -> AllSwitch[2].isChecked = true
             }
+        }
+
+        private fun resetCoff () {
+            val photo = applicationContext.filesDir.listFiles { _, name -> name.endsWith(".jpg") }
+            val sharedPref = getSharedPreferences("PhotoMetadata", MODE_PRIVATE)
+
+            photo?.forEach { file ->
+                val photoName = file.name.substringBeforeLast(".")
+                with(sharedPref.edit()) {
+                    putInt("$photoName-coff", 5)
+                    apply()
+                }
+            }
+            Log.d("ParametersActivity", "ResetCoff called.")
+            Toast.makeText(this, "les coefficients ont bien été reset à 5", Toast.LENGTH_SHORT).show()
         }
 
 

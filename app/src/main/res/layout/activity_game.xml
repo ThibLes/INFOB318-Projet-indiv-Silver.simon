@@ -72,6 +72,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.049" />
 
+
     <ImageView
         android:id="@+id/imageViewPhotoPersonne"
         android:layout_width="248dp"

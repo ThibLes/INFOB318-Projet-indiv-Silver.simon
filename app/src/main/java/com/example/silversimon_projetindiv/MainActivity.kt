@@ -16,8 +16,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Récupération des boutons et assignation de variables grâce à leurs ID
         val buttonCommencer = findViewById<Button>(R.id.buttonCommencer)
         val buttonParameters = findViewById<ImageView>(R.id.imageParameters)
+        // Animation de changement d'écran vers la droite
         val optionsSlideRight = ActivityOptions.makeCustomAnimation(
             this,
             R.anim.slide_in_right,
@@ -25,11 +27,13 @@ class MainActivity : AppCompatActivity() {
         )
 
 
+        // Bouton qui nous permet de rejoindre la page "Game"
         buttonCommencer.setOnClickListener {
             val intentGame = Intent(this, com.example.silversimon_projetindiv.Game::class.java)
             startActivity(intentGame, optionsSlideRight.toBundle())
         }
 
+        // Bouton qui nous permet de rejoindre la page "Paramètres"
         buttonParameters.setOnClickListener {
             val intentGame = Intent(this, com.example.silversimon_projetindiv.Parameters::class.java)
             startActivity(intentGame, optionsSlideRight.toBundle())

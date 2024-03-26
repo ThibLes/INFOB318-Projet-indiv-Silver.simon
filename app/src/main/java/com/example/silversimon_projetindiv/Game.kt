@@ -147,6 +147,10 @@ class Game : AppCompatActivity() {
                     val isCorrect = button.text == correctName
                     if (!isCorrect) {
                         incorrectTry[randomPhotoId] = true
+                        val musique = MediaPlayer.create(applicationContext, R.raw.wrongsong)
+                        musique.setOnCompletionListener { mp -> mp.release() }
+                        musique.setVolume(1f,1f)
+                        musique.start()
                         Log.d("GameActivity", "dedans : ${randomPhotoId}")
                     }
 
@@ -156,20 +160,16 @@ class Game : AppCompatActivity() {
                             this, if (isCorrect) R.color.green else R.color.red
                         )
                     )
-
-                    if (isCorrect) {
-                        val musique = MediaPlayer.create(applicationContext, R.raw.goodanswer)
-                        musique.setOnCompletionListener { mp -> mp.release() }
-                        musique.start()
-                    }
-                    Log.d("GameActivity", "ok ou non: ${isCorrect}")
-
-
+                    val musique = MediaPlayer.create(applicationContext, R.raw.goodanswer)
                     if (isCorrect && incorrectTry[randomPhotoId] == true) {
                         incorrectTry.remove(randomPhotoId)
+                        musique.setOnCompletionListener { mp -> mp.release() }
+                        musique.start()
                         Log.d("GameActivity", "out : ${randomPhotoId}")
                     } else if (isCorrect) {
                         changePhotoCoff(randomPhotoId, true)
+                        musique.setOnCompletionListener { mp -> mp.release() }
+                        musique.start()
                     } else {
                         if (incorrectTry[randomPhotoId] != true) {
                             incorrectTry[randomPhotoId] = true
@@ -184,6 +184,7 @@ class Game : AppCompatActivity() {
                             loadNextImage()
                         }
                     }, 1500)
+
                 }
             }
         }
