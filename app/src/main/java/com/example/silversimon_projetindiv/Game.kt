@@ -22,6 +22,7 @@ import java.io.IOException
 
 class Game : AppCompatActivity() {
 
+
     private lateinit var question: Question
     private var incorrectTry = mutableMapOf<String,Boolean>()
 
@@ -29,9 +30,10 @@ class Game : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
+        // Charger la première image
         loadNextImage()
 
-
+        // Animation de changement d'écran vers la gauche
         val optionsSlideLeft = ActivityOptions.makeCustomAnimation(
             this,
             R.anim.slide_in_left,
@@ -39,7 +41,7 @@ class Game : AppCompatActivity() {
         )
 
 
-        // Retourner au début
+        // Retourner au début de l'application
         val buttonHome = findViewById<ImageView>(R.id.imageHome)
         buttonHome.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
@@ -56,19 +58,25 @@ class Game : AppCompatActivity() {
 
         question = Question(this)
 
+
+        // VERIFIER SI CA SERT VRAIMENT 0 QQCHOSE
         lifecycleScope.launch {
             val imageViewPhotoPersonne = findViewById<ImageView>(R.id.imageViewPhotoPersonne)
             val randomPhotoId = getRandomPhotoIdFromInternalStorage()
             randomPhotoId?.let {
                 val correctName = getCorrectName(it)
                 val correctGenre = getCorrectGenre(it)
-                val propositions = question.generateQuestion(correctGenre,correctName)
-
-                // setImageFromInternalStorage(it, imageViewPhotoPersonne)
             }
         }
 
     }
+
+    /**
+     * Récupère un identifiant de photo aléatoire depuis le stockage interne de l'application
+     * en fonction du niveau de difficulté actuel qui est stocké dans les préférences partagées.
+     *
+     * @return Un identifiant de photo aléatoire, ou `null` s'il n'y a pas de photos.
+     */
     private suspend fun getRandomPhotoIdFromInternalStorage(): String? {
         val difficultyLevel = getDifficultyLevel()
         return withContext(Dispatchers.IO) {
@@ -95,6 +103,12 @@ class Game : AppCompatActivity() {
     }
 
 
+    /**
+     * Charge une image depuis le stockage interne de l'application et l'affiche dans un `ImageView`.
+     *
+     * @param filename Le nom du fichier de l'image à charger.
+     * @param imageView L'`ImageView` dans lequel afficher l'image.
+     */
     private fun setImageFromInternalStorage(filename: String, imageView: ImageView) {
         try {
             val fileInputStream = openFileInput(filename)
@@ -107,12 +121,24 @@ class Game : AppCompatActivity() {
         }
     }
 
+    /**
+     * Récupère le nom correct d'une photo à partir de son identifiant.
+     *
+     * @param photoId L'identifiant de la photo.
+     * @return Le nom correct de la photo.
+     */
     private fun getCorrectName(photoId: String): String {
         val filename = photoId.substringBeforeLast(".") // car sinon le .jpg à la fin fait bug pour trouver les infos
         val sharedPreferences = getSharedPreferences("PhotoMetadata", Context.MODE_PRIVATE)
         return sharedPreferences.getString("$filename-name", "Inconnu") ?: "Inconnu"
     }
 
+    /**
+     * Récupère le genre d'une photo à partir de son identifiant.
+     *
+     * @param photoId L'identifiant de la photo.
+     * @return Le genre correct de la photo.
+     */
     private fun getCorrectGenre(photoId: String): String {
         val filename = photoId.substringBeforeLast(".")
         val sharedPreferences = getSharedPreferences("PhotoMetadata", Context.MODE_PRIVATE)
@@ -120,6 +146,9 @@ class Game : AppCompatActivity() {
     }
 
     // permet de relancer les photos et setup le jeu
+    /**
+     * Charge la photo suivante et configure le jeu.
+     */
     private fun loadNextImage() {
         lifecycleScope.launch {
             val imageViewPhotoPersonne = findViewById<ImageView>(R.id.imageViewPhotoPersonne)
@@ -130,6 +159,15 @@ class Game : AppCompatActivity() {
             setupGame()
         }
     }
+
+    /**
+     * Génère les boutons de proposition pour une question.
+     *
+     * Nous prenons le nom correct et 3 autres noms aléatoires du même genre pour les propositions.
+     *
+     * @param propositions La liste des propositions de noms.
+     * @param correctName Le nom correct à trouver.
+     */
     private suspend fun PropositionButtons(propositions: List<String>, correctName: String) {
 
         val buttons = listOf(
@@ -190,6 +228,9 @@ class Game : AppCompatActivity() {
         }
     }
 
+    /**
+     * Configure le jeu en affichant une photo et en générant une question.
+     */
     private fun setupGame() {
         lifecycleScope.launch {
             val imageViewPhotoPersonne = findViewById<ImageView>(R.id.imageViewPhotoPersonne)
@@ -205,12 +246,25 @@ class Game : AppCompatActivity() {
             }
         }
     }
+
+    /**
+     * Récupère le niveau de difficulté actuel du jeu qui est stocké dans les préférences partagées.
+     *
+     * @return Le niveau de difficulté actuel.
+     */
     private fun getDifficultyLevel(): String {
         val difficulty = getSharedPreferences("GameDifficulty", Context.MODE_PRIVATE)
         return difficulty.getString("Difficulty", "normal") ?: "normal"
         Log.d("GameActivity", "difficulté: ${difficulty}")
 
     }
+
+    /**
+     * Modifie le coefficient d'une photo.
+     *
+     * @param filename Le nom du fichier de la photo.
+     * @param isCorrect `true` si la réponse était correcte, `false` sinon.
+     */
     private fun changePhotoCoff(filename: String, isCorrect: Boolean) {
         val photoname = getPhotoCoff(filename.substringBeforeLast("."))
         val sharedPref = getSharedPreferences("PhotoMetadata", MODE_PRIVATE)
@@ -228,6 +282,12 @@ class Game : AppCompatActivity() {
         }
     }
 
+    /**
+     * Récupère le coefficient d'une photo.
+     *
+     * @param photoname Le nom de la photo.
+     * @return Le coefficient de la photo.
+     */
     private fun getPhotoCoff(photoname: String): Int {
         val sharedPreferences = getSharedPreferences("PhotoMetadata", Context.MODE_PRIVATE)
         return sharedPreferences.getInt("$photoname-coff", 5)

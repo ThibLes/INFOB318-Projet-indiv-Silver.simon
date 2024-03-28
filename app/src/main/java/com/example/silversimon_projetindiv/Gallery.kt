@@ -64,6 +64,11 @@ class   Gallery : AppCompatActivity(){
         } ?: Toast.makeText(this, "No photo captured", Toast.LENGTH_SHORT).show() // Gérez le cas où `bitmap` est null
     }
 
+    /**
+     * Demande à l'utilisateur de saisir le prénom de la personne sur la photo.
+     *
+     * @param afterNameProvided La fonction à appeler après que l'utilisateur ait saisi un prénom.
+     */
     private fun askForFirstName(afterNameProvided: (String, String) -> Unit) {
         val input = EditText(this)
         AlertDialog.Builder(this)
@@ -82,6 +87,11 @@ class   Gallery : AppCompatActivity(){
             .show()
     }
 
+    /**
+     * Demande à l'utilisateur de sélectionner le genre de la personne sur la photo.
+     *
+     * @param afterGenderProvided La fonction à appeler après que l'utilisateur ait sélectionné un genre.
+     */
     private fun askForGender(afterGenderProvided: (String) -> Unit) {
         val gender = arrayOf("Homme", "Femme", "Non-binaire", "Non spécifié")
         AlertDialog.Builder(this)
@@ -159,11 +169,20 @@ class   Gallery : AppCompatActivity(){
         loadPhotosFromInternalStorageIntoRecyclerView()
     }
 
+    /**
+     * Configure le RecyclerView pour afficher les photos du stockage interne de l'appareil.
+     *
+     */
     private fun setupInternalStorageRecyclerView() = binding.rvPrivatePhotos.apply {
         adapter = internalStoragePhotoAdapter
         layoutManager = StaggeredGridLayoutManager(3, RecyclerView.VERTICAL)
     }
 
+    /**
+     * Charge les photos du stockage interne de l'appareil dans le RecyclerView.
+     *
+     * Cette fonction est suspendue pour pouvoir être appelée depuis un contexte de coroutine.
+     */
     private fun loadPhotosFromInternalStorageIntoRecyclerView() {
         lifecycleScope.launch {
             val photos = loadPhotosFromInternalStorage()
@@ -171,6 +190,13 @@ class   Gallery : AppCompatActivity(){
         }
     }
 
+    /**
+     *
+     * Supprime une photo du stockage interne de l'appareil.
+     *
+     * @param filename Le nom de fichier de la photo à supprimer.
+     * @return true si la photo a été supprimée, false sinon.
+     */
     private fun deletePhotoFromInternalStorage(filename: String): Boolean {
         return try {
             deleteFile(filename)
@@ -180,6 +206,13 @@ class   Gallery : AppCompatActivity(){
         }
     }
 
+
+    /**
+     * fonction pour charger les photos depuis le stockage interne de l'appareil.
+     *
+     * @return une liste de [InternalStoragePhoto] contenant les photos chargées.
+     *
+     */
     private suspend fun loadPhotosFromInternalStorage(): List<InternalStoragePhoto> {
         return withContext(Dispatchers.IO) {
             val files = filesDir.listFiles()
@@ -200,6 +233,15 @@ class   Gallery : AppCompatActivity(){
         }
     }
 
+    /**
+     * Enregistre une photo dans le stockage interne de l'appareil.
+     *
+     * @param filename Le nom de fichier unique pour la photo.
+     * @param bmp Le bitmap de la photo à enregistrer.
+     * @param namePatient Le prénom de la personne sur la photo.
+     * @return true si la photo a été enregistrée avec succès, false sinon.
+     *
+     */
     private fun savePhotoToInternalStorage(filename: String, bmp: Bitmap, namePatient: String, gender : String, coff : Int): Boolean {
         // Le nom du fichier reste inchangé, seul pour la photo
         val completeFilename = "$filename.jpg"

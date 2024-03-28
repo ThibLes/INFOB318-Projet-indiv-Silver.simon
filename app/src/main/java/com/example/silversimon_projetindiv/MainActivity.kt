@@ -16,6 +16,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
+
         // Récupération des boutons et assignation de variables grâce à leurs ID
         val buttonCommencer = findViewById<Button>(R.id.buttonCommencer)
         val buttonParameters = findViewById<ImageView>(R.id.imageParameters)
