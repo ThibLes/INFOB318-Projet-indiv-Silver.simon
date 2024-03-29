@@ -21,6 +21,9 @@ class MainActivity : AppCompatActivity() {
         // Récupération des boutons et assignation de variables grâce à leurs ID
         val buttonCommencer = findViewById<Button>(R.id.buttonCommencer)
         val buttonParameters = findViewById<ImageView>(R.id.imageParameters)
+        assert(buttonCommencer != null) { "Le bouton 'Commencer' n'a pas été trouvé." }
+        assert(buttonParameters != null) { "Le bouton 'Paramètres' n'a pas été trouvé." }
+
         // Animation de changement d'écran vers la droite
         val optionsSlideRight = ActivityOptions.makeCustomAnimation(
             this,

@@ -177,6 +177,7 @@ class   Gallery : AppCompatActivity(){
     private fun setupInternalStorageRecyclerView() = binding.rvPrivatePhotos.apply {
         adapter = internalStoragePhotoAdapter
         layoutManager = StaggeredGridLayoutManager(3, RecyclerView.VERTICAL)
+        assert(adapter != null) { "erreur." }
     }
 
     /**

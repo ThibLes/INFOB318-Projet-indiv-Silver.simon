@@ -19,6 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
+import kotlin.math.log
 
 class Game : AppCompatActivity() {
 
@@ -58,16 +59,6 @@ class Game : AppCompatActivity() {
 
         question = Question(this)
 
-
-        // VERIFIER SI CA SERT VRAIMENT 0 QQCHOSE
-        lifecycleScope.launch {
-            val imageViewPhotoPersonne = findViewById<ImageView>(R.id.imageViewPhotoPersonne)
-            val randomPhotoId = getRandomPhotoIdFromInternalStorage()
-            randomPhotoId?.let {
-                val correctName = getCorrectName(it)
-                val correctGenre = getCorrectGenre(it)
-            }
-        }
 
     }
 
@@ -149,7 +140,6 @@ class Game : AppCompatActivity() {
         return sharedPreferences.getString("$filename-gender", "nonGenre") ?: "nonGenre"
     }
 
-    // permet de relancer les photos et setup le jeu
     /**
      * Charge la photo suivante et configure le jeu.
      */
@@ -157,10 +147,11 @@ class Game : AppCompatActivity() {
         lifecycleScope.launch {
             val imageViewPhotoPersonne = findViewById<ImageView>(R.id.imageViewPhotoPersonne)
             val randomPhotoId = getRandomPhotoIdFromInternalStorage()
-            if (randomPhotoId == null) {
-            randomPhotoId?.let {
-                setImageFromInternalStorage(it, imageViewPhotoPersonne)
-            }} else { runOnUiThread { imageViewPhotoPersonne.setImageResource(R.drawable.nophoto) }}
+            assert(randomPhotoId != null) { "erreur." }
+            if (randomPhotoId != null) {
+                randomPhotoId?.let {
+                    setImageFromInternalStorage(it, imageViewPhotoPersonne)
+                }} else { runOnUiThread { imageViewPhotoPersonne.setImageResource(R.drawable.nophoto) }}
             setupGame()
         }
     }
@@ -279,8 +270,9 @@ class Game : AppCompatActivity() {
             !isCorrect && currentCoff < 10 -> currentCoff + 1
             else -> currentCoff
         }
-        assert(currentCoff in 1..10) { "Le coefficient n'est pas dans la bonne tranche" }
+        assert(newCoff in 1..10) { "Le nouveau coefficient est hors de portée: $newCoff" }
 
+        Log.d("GameActivity", "nouveaucoff: ${newCoff}")
 
         with(sharedPref.edit()) {
             putInt("$photoname-coff", newCoff)

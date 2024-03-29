@@ -58,6 +58,8 @@ class Question (private val context: Context) {
      * @return Une liste de quatre noms avec le nom correct et 3 autres noms du même genre.
      */
     fun generateQuestion(correctGenre: String, correctName: String): List<String> {
+        assert(names != null) { "Les données des noms n'ont pas été chargées." }
+        assert(correctName.isNotBlank()) { "Le nom correct ne peut pas être vide." }
         // Fait la bonne liste en fonction du bon genre
         val correctList = when (correctGenre) {
             "Homme" -> names?.male ?: listOf()
