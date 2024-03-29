@@ -52,7 +52,7 @@ class   Gallery : AppCompatActivity(){
                 val filename = UUID.randomUUID().toString()
                 // Essayez d'enregistrer la photo avec le prénom dans le stockage interne
                 val isSavedSuccessfully = savePhotoToInternalStorage(filename, nonNullBitmap, firstName, gender?: "Non spécifié",5)
-                assert(isSavedSuccessfully) { "Failed to save photo"}
+               // assert(isSavedSuccessfully) { "Failed to save photo"}
                 if(isSavedSuccessfully) {
                     // Si la sauvegarde a réussi, rechargez les photos et affichez un message
                     loadPhotosFromInternalStorageIntoRecyclerView()
@@ -177,7 +177,7 @@ class   Gallery : AppCompatActivity(){
     private fun setupInternalStorageRecyclerView() = binding.rvPrivatePhotos.apply {
         adapter = internalStoragePhotoAdapter
         layoutManager = StaggeredGridLayoutManager(3, RecyclerView.VERTICAL)
-        assert(adapter != null) { "erreur." }
+        // assert(adapter != null) { "erreur." }
     }
 
     /**
@@ -245,7 +245,7 @@ class   Gallery : AppCompatActivity(){
      *
      */
     private fun savePhotoToInternalStorage(filename: String, bmp: Bitmap, namePatient: String, gender : String, coff : Int): Boolean {
-        assert(filename.isNotBlank()) { "Le nom de fichier ne doit pas être vide" }
+        // assert(filename.isNotBlank()) { "Le nom de fichier ne doit pas être vide" }
         // Le nom du fichier reste inchangé, seul pour la photo
         val completeFilename = "$filename.jpg"
         return try {

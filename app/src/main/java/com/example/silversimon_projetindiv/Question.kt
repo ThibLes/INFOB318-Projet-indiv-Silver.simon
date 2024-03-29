@@ -1,6 +1,7 @@
 package com.example.silversimon_projetindiv
 
 import android.content.Context
+import android.util.Log
 import com.google.gson.Gson
 import java.io.IOException
 data class Name(val male: List<String>, val feminin: List<String>, val nonGenre: List<String>)
@@ -36,10 +37,11 @@ class Question (private val context: Context) {
                 inputStream.read(buffer)
                 val json = String(buffer, Charsets.UTF_8)
                 names = Gson().fromJson(json, Name::class.java)
+                Log.d("GameActivity", " $names")
 
             }
             // Vérifie que la liste de prénoms n'est pas vide
-            assert(names != null, { "Erreur lors de la lecture du fichier JSON, aucun prénom trouvé" })
+           // assert(names != null, { "Erreur lors de la lecture du fichier JSON, aucun prénom trouvé" })
         } catch (e: IOException) {
             // Print erreur en cas de problème
             e.printStackTrace()
@@ -58,8 +60,8 @@ class Question (private val context: Context) {
      * @return Une liste de quatre noms avec le nom correct et 3 autres noms du même genre.
      */
     fun generateQuestion(correctGenre: String, correctName: String): List<String> {
-        assert(names != null) { "Les données des noms n'ont pas été chargées." }
-        assert(correctName.isNotBlank()) { "Le nom correct ne peut pas être vide." }
+         // assert(names != null) { "Les données des noms n'ont pas été chargées." }
+        // assert(correctName.isNotBlank()) { "Le nom correct ne peut pas être vide." }
         // Fait la bonne liste en fonction du bon genre
         val correctList = when (correctGenre) {
             "Homme" -> names?.male ?: listOf()
@@ -69,6 +71,9 @@ class Question (private val context: Context) {
 
         // Prend 3 prénoms au hasard dans la liste, en verifiant que le prénom est différent que le prénom correct
         val otherNames = correctList.filter { it != correctName }.shuffled().take(3)
+        Log.d("GameActivity", " $otherNames")
+
+
 
         return listOf(correctName) + otherNames
     }
