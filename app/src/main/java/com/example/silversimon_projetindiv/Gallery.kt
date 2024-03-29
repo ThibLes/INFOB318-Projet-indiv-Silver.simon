@@ -94,10 +94,10 @@ class   Gallery : AppCompatActivity(){
      * @param afterGenderProvided La fonction à appeler après que l'utilisateur ait sélectionné un genre.
      */
     private fun askForGender(afterGenderProvided: (String) -> Unit) {
-        val gender = arrayOf("Homme", "Femme", "Non-binaire", "Non spécifié")
+        val gender = arrayOf("Homme", "Femme", "Non-binaire")
         AlertDialog.Builder(this)
             .setTitle("Sélectionnez le genre de la personne sur la photo")
-            .setItems(gender) { dialog, which ->
+            .setItems(gender) { _, which ->
                 afterGenderProvided(gender[which])
             }
             .show()
