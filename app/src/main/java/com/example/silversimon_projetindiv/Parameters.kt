@@ -21,6 +21,9 @@ class Parameters : AppCompatActivity() {
 
         val editTextPrenomPatient = findViewById<EditText>(R.id.editTextPrenom)
         val buttonEnregistrer = findViewById<Button>(R.id.buttonEnregistrer)
+        // Verification si les éléments sont bien chargés
+        assert(editTextPrenomPatient != null) { "editTextPrenomPatient n'est pas bien chargé" }
+        assert(buttonEnregistrer != null) { "buttonEnregistrer n'est pas bien chargé" }
 
         val sharedPreferences = getSharedPreferences("PrenomPatient", Context.MODE_PRIVATE)
         val prenomPseudo = sharedPreferences.getString("prenom", "")
@@ -28,7 +31,11 @@ class Parameters : AppCompatActivity() {
         val buttonHome = findViewById<ImageView>(R.id.imageHome)
         val buttonGallery = findViewById<Button>(R.id.buttonGalerie)
         val buttonReset = findViewById<Button>(R.id.rstNiveau)
-        //test
+
+        // Verification si les éléments sont bien chargés
+        assert(editTextPrenomPatient != null) { "editTextPrenomPatient n'est pas bien chargé" }
+        assert(buttonEnregistrer != null) { "buttonEnregistrer n'est pas bien chargé" }
+        assert(buttonHome != null) { "buttonHome n'est pas bien chargé" }
 
         val switchEasy: Switch = findViewById(R.id.switchEasy)
         val switchMedium: Switch = findViewById(R.id.switchMedium)
@@ -42,16 +49,20 @@ class Parameters : AppCompatActivity() {
         buttonEnregistrer.setOnClickListener {
 
             val nouveauPrenom = editTextPrenomPatient.text.toString()
+            assert(nouveauPrenom.isNotBlank()) { "Un nouveau prénom est nécessaire" }
 
             val editor = sharedPreferences.edit()
             editor.putString("prenom", nouveauPrenom)
             editor.apply()
-
+            // Message de confirmation
             Toast.makeText(this, "Modifications enregistrées", Toast.LENGTH_SHORT).show()
         }
 
 
-
+        /**
+         * Enregistre la difficulté du jeu dans les préférences partagées.
+         * @param level La difficulté du jeu.
+         */
         AllSwitch.forEach { switch ->
             switch.setOnCheckedChangeListener { idbutton, isChecked ->
                 if (isChecked) {
@@ -126,6 +137,7 @@ class Parameters : AppCompatActivity() {
 
         private fun resetCoff () {
             val photo = applicationContext.filesDir.listFiles { _, name -> name.endsWith(".jpg") }
+            assert(photo != null) { "Aucune photo trouvée" }
             val sharedPref = getSharedPreferences("PhotoMetadata", MODE_PRIVATE)
 
             photo?.forEach { file ->

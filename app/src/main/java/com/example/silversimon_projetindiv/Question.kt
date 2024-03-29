@@ -1,10 +1,9 @@
 package com.example.silversimon_projetindiv
 
 import android.content.Context
-import android.util.Log
 import com.google.gson.Gson
 import java.io.IOException
-data class Name(val masculin: List<String>, val feminin: List<String>, val nonGenre: List<String>)
+data class Name(val male: List<String>, val feminin: List<String>, val nonGenre: List<String>)
 
 
 /**
@@ -39,6 +38,8 @@ class Question (private val context: Context) {
                 names = Gson().fromJson(json, Name::class.java)
 
             }
+            // Vérifie que la liste de prénoms n'est pas vide
+            assert(names != null, { "Erreur lors de la lecture du fichier JSON, aucun prénom trouvé" })
         } catch (e: IOException) {
             // Print erreur en cas de problème
             e.printStackTrace()
@@ -59,7 +60,7 @@ class Question (private val context: Context) {
     fun generateQuestion(correctGenre: String, correctName: String): List<String> {
         // Fait la bonne liste en fonction du bon genre
         val correctList = when (correctGenre) {
-            "Homme" -> names?.masculin ?: listOf()
+            "Homme" -> names?.male ?: listOf()
             "Femme" -> names?.feminin ?: listOf()
             else -> names?.nonGenre ?: listOf()
         }

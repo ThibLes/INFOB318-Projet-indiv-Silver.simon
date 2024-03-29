@@ -79,6 +79,10 @@ class Game : AppCompatActivity() {
      */
     private suspend fun getRandomPhotoIdFromInternalStorage(): String? {
         val difficultyLevel = getDifficultyLevel()
+        assert(
+            difficultyLevel in listOf("facile", "moyen", "difficile", "normal"),
+            { "Niveau de difficulté inconnu" }
+        )
         return withContext(Dispatchers.IO) {
             val files = applicationContext.filesDir.listFiles { _, name -> name.endsWith(".jpg") }
             files?.let { fileList ->
@@ -153,9 +157,10 @@ class Game : AppCompatActivity() {
         lifecycleScope.launch {
             val imageViewPhotoPersonne = findViewById<ImageView>(R.id.imageViewPhotoPersonne)
             val randomPhotoId = getRandomPhotoIdFromInternalStorage()
+            if (randomPhotoId == null) {
             randomPhotoId?.let {
                 setImageFromInternalStorage(it, imageViewPhotoPersonne)
-            }
+            }} else { runOnUiThread { imageViewPhotoPersonne.setImageResource(R.drawable.nophoto) }}
             setupGame()
         }
     }
@@ -274,7 +279,8 @@ class Game : AppCompatActivity() {
             !isCorrect && currentCoff < 10 -> currentCoff + 1
             else -> currentCoff
         }
-        Log.d("GameActivity", "nouveaucoff: ${newCoff}")
+        assert(currentCoff in 1..10) { "Le coefficient n'est pas dans la bonne tranche" }
+
 
         with(sharedPref.edit()) {
             putInt("$photoname-coff", newCoff)
