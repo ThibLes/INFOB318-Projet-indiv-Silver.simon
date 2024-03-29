@@ -240,17 +240,20 @@ class Game : AppCompatActivity() {
         lifecycleScope.launch {
             val imageViewPhotoPersonne = findViewById<ImageView>(R.id.imageViewPhotoPersonne)
             val randomPhotoId = getRandomPhotoIdFromInternalStorage()
-            randomPhotoId?.let {
-                val correctName = getCorrectName(it)
-                val correctGenre = getCorrectGenre(it)
-                val propositions = question.generateQuestion(correctGenre, correctName)
+            if (randomPhotoId != null) {
+                randomPhotoId?.let {
+                    val correctName = getCorrectName(it)
+                    val correctGenre = getCorrectGenre(it)
+                    val propositions = question.generateQuestion(correctGenre, correctName)
 
-                setImageFromInternalStorage(it, imageViewPhotoPersonne)
-                PropositionButtons(propositions,correctName)
-
+                    setImageFromInternalStorage(it, imageViewPhotoPersonne)
+                    PropositionButtons(propositions, correctName)
+                }
+            } else {
+                imageViewPhotoPersonne.setImageResource(R.drawable.nophoto)
+            }
             }
         }
-    }
 
     /**
      * Récupère le niveau de difficulté actuel du jeu qui est stocké dans les préférences partagées.
@@ -260,8 +263,6 @@ class Game : AppCompatActivity() {
     private fun getDifficultyLevel(): String {
         val difficulty = getSharedPreferences("GameDifficulty", Context.MODE_PRIVATE)
         return difficulty.getString("Difficulty", "normal") ?: "normal"
-        Log.d("GameActivity", "difficulté: ${difficulty}")
-
     }
 
     /**
