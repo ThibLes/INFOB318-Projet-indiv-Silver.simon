@@ -8,25 +8,39 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.silversimon_projetindiv.databinding.ItemPhotoBinding
 
+/**
+ * Adapter for the RecyclerView that displays the photos stored in the internal memory of the application.
+ *
+ * This adapter is used to display the photos in the RecyclerView of the [InternalStorageActivity].
+ * It uses a ListAdapter to display the photos and handle the updates.
+ *
+ * @author Thibaut Lesage
+ */
 class InternalStoragePhotoAdapter(
-    // permet de cliquer sur une photo
+    // Is called when a photo is clicked and takes an InternalStoragePhoto as a parameter which is the photo clicked.
     private val onPhotoClick: (InternalStoragePhoto) -> Unit
 ) : ListAdapter<InternalStoragePhoto, InternalStoragePhotoAdapter.PhotoViewHolder>(Companion) {
 
-    // Classe interne qui permet de lier les données de la photo à la vue.
+    // Class that represents the view of a photo.
     inner class PhotoViewHolder(val binding: ItemPhotoBinding): RecyclerView.ViewHolder(binding.root)
 
-    // Objet qui permet de comparer les photos.
+    // Companion object that allows to compare two photos by two criteria: the name and the bitmap.
     companion object : DiffUtil.ItemCallback<InternalStoragePhoto>() {
         /**
-         * Vérifie si les deux photos sont identiques.
+         * Compare only the names of the two photos.
+         *
+         * @author Thibaut Lesage
+         * @version 1.0
          */
         override fun areItemsTheSame(oldItem: InternalStoragePhoto, newItem: InternalStoragePhoto): Boolean {
             return oldItem.name == newItem.name
         }
 
         /**
-         * Vérifie si les deux photos sont identiques et ont le même contenu (bitmap).
+         * Compare the names and the bitmaps of the two photos.
+         *
+         * @author Thibaut Lesage
+         * @version 1.0
          */
         override fun areContentsTheSame(oldItem: InternalStoragePhoto, newItem: InternalStoragePhoto): Boolean {
             return oldItem.name == newItem.name && oldItem.bmp.sameAs(newItem.bmp)
@@ -34,13 +48,18 @@ class InternalStoragePhotoAdapter(
     }
 
     /**
-     * Crée un [PhotoViewHolder] et le lie à la vue [ItemPhotoBinding].
+     * Creates a new [PhotoViewHolder] by inflating the layout [ItemPhotoBinding].
+     *
+     * @author Thibaut Lesage
+     * @version 1.1
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
         return PhotoViewHolder(
+            // Inflate the layout item_photo.xml. Inflate means to render the layout.
             ItemPhotoBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
+                // false
                 false
             )
         )
@@ -48,23 +67,37 @@ class InternalStoragePhotoAdapter(
 
 
     /**
-     * Lie les données de la photo à la vue [ItemPhotoBinding].
-     */
+        * Binds the photo to the view holder.
+        *
+        * This function is called when the RecyclerView needs to display a photo.
+        * It binds the photo to the view holder and sets the image and the name of the patient.
+        * It also adjusts the aspect ratio of the image so that it is not distorted.
+        * Finally, it allows you to click on a photo.
+        *
+        * @param holder The view holder that displays the photo.
+        * @param position The position of the photo in the list.
+        *
+        * @author Thibaut Lesage
+        * @version 1.3
+        */
+
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
         val photo = currentList[position]
         holder.binding.apply {
-            // Affiche la photo et le nom du patient
+            // Display the image and the name of the patient
             ivPhoto.setImageBitmap(photo.bmp)
             tvPhotoName.text = photo.namePatient
 
-            // Ajuste le ratio de l'image pour qu'elle ne soit pas déformée
+            // Adjusts the aspect ratio of the image so that it is not distorted
             val aspectRatio = photo.bmp.width.toFloat() / photo.bmp.height.toFloat()
+            // Create a new ConstraintSet and apply it to the root layout. A ConstraintSet is a set of constraints
+            // and includes the ability to apply them to a ConstraintLayout.
             ConstraintSet().apply {
                 clone(root)
                 setDimensionRatio(ivPhoto.id, aspectRatio.toString())
                 applyTo(root)
             }
-            // Permet de cliquer sur une photo
+            // Allows you to click on a photo
             ivPhoto.setOnLongClickListener {
                 onPhotoClick(photo)
                 true

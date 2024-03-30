@@ -1,78 +1,85 @@
 package com.example.silversimon_projetindiv
 
 import android.content.Context
-import android.util.Log
 import com.google.gson.Gson
 import java.io.IOException
 data class Name(val male: List<String>, val feminin: List<String>, val nonGenre: List<String>)
 
 
 /**
- * Gère la création de questions basées sur des noms masculins, féminins et non-genrés.
+ * Manages the creation of questions based on masculine, feminine and non-gendered nouns.
  *
- * Cette classe charge une liste de noms depuis un fichier JSON situé dans les assets (name.json),
- * et génère des questions en sélectionnant aléatoirement des noms selon le genre.
+ * This class loads a list of names from a JSON file located in the assets (name.json),
+ * and generates questions by randomly selecting names according to gender.
  *
- * @param context Le contexte de l'application, utilisé pour accéder aux assets.
- * @property names Contient les listes de noms masculins, féminins et non-genrés chargées du fichier JSON.
+ * @param context The application context, used to access assets.
+ * @property names Contains lists of masculine, feminine and non-gendered names loaded from the JSON file.
+ *
+ * @author Thibaut Lesage
+ *
  */
-class Question (private val context: Context) {
-    var names: Name? = null
 
-    // Lance la fonction "loadPrenoms" dés que la class est utilisée.
+class Question (private val context: Context) {
+    private var names: Name? = null
+
+    // Load the names when the class is used
     init {
         loadPrenoms()
     }
 
     /**
-     * Cette fonction ouvre le fichier `name.json`, lit son contenu, et récupère toutes ses données ( les prénoms )
-     * le JSON en un objet [Name] qui sera ensuite assigné à [names].
+     * Opens the `name.json` file, reads its contents, and retrieves all its data (the names)
+     * converting the JSON into a [Name] object which is then assigned to [names].
+     *
+     * @throws IOException If the file cannot be opened or read.
+     *
+     * @author Thibaut Lesage
+     * @version 1.4
      */
     private fun loadPrenoms() {
         try {
-            // Ouvre le fichier, regarde sa taille, créé un buffer de la même taille ( pour stocker temporairement ), le lit et mets tout dans "name"
+            // Open the file, look at its size, create a buffer of the same size (for temporary storage), read it and put everything in "name".
             context.assets.open("name").use { inputStream ->
                 val size = inputStream.available()
                 val buffer = ByteArray(size)
                 inputStream.read(buffer)
                 val json = String(buffer, Charsets.UTF_8)
+                // Convert the JSON into a Name object
                 names = Gson().fromJson(json, Name::class.java)
-                Log.d("GameActivity", " $names")
-
             }
         } catch (e: IOException) {
-            // Print erreur en cas de problème
+            // If the file cannot be opened or read, print the stack trace
             e.printStackTrace()
         }
     }
 
     /**
-     * Génère une liste de propositions de noms basée sur le genre et le nom corrects ( à ne pas repdnre ).
+     * Generates a list of name proposals based on the correct gender and name (not to be repeated).
      *
-     * Cette fonction sélectionne la liste des noms ayant le même genre spécifié,
-     * exclut le nom correct pour pas avoir 2 fois le même prénom dans les propositions
-     * et fait une liste de propositions avec le nom correct et trois autres noms aléatoires.
+     * This function selects the list of names with the same specified gender,
+     * excludes the correct name so as not to have the same first name twice in the proposals
+     * and makes a list of proposals with the correct name and three other random names.
      *
-     * @param correctGenre Le genre pour les propositions (masculin, féminin, ou non-genré).
-     * @param correctName Le nom correct à mettre dans les propositions.
-     * @return Une liste de quatre noms avec le nom correct et 3 autres noms du même genre.
+     * @param correctGender The gender for the proposals (masculine, feminine, or non-gendered).
+     * @param correctName The correct name to put in the proposals.
+     * @return A list of four names with the correct name and 3 other names of the same gender.
+     *
+     * @throws AssertionError If the names have not been loaded or the correct name is empty.
+     *
+     * @author Thibaut Lesage
+     * @version 1.3
      */
-    fun generateQuestion(correctGenre: String, correctName: String): List<String> {
+    fun generateQuestion(correctGender: String, correctName: String): List<String> {
         assert(names != null) { "Les données des noms n'ont pas été chargées." }
         assert(correctName.isNotBlank()) { "Le nom correct ne peut pas être vide." }
-        // Fait la bonne liste en fonction du bon genre
-        val correctList = when (correctGenre) {
+        // Select the list of names according to the correct gender
+        val correctList = when (correctGender) {
             "Homme" -> names?.male ?: listOf()
             "Femme" -> names?.feminin ?: listOf()
             else -> names?.nonGenre ?: listOf()
         }
-
-        // Prend 3 prénoms au hasard dans la liste, en verifiant que le prénom est différent que le prénom correct
+        // Take 3 names at random from the list, checking that the first name is different from the correct one.
         val otherNames = correctList.filter { it != correctName }.shuffled().take(3)
-        Log.d("GameActivity", " $otherNames")
-
-
-
         return listOf(correctName) + otherNames
     }
 }
